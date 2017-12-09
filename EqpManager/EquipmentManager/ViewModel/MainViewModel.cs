@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
+using EquipmentManager.Infrastructure;
 using EquipmentManager.ViewModel.Equipment;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -31,14 +32,26 @@ namespace EquipmentManager.ViewModel
             set => SetProperty(ref _goalEquipmentId, value);
         }
 
-        public MainViewModel()
+        [ImportingConstructor]
+        public MainViewModel(IIOService ioService)
         {
+            _ioService = ioService;
             SelectCommand = new DelegateCommand(ExecuteSelect);
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
             Equipments = new ObservableCollection<EquipmentViewModel>(_testItems);
         }
 
         #region Private methods
+
+        private void ExecuteAddMock()
+        {
+            var viewModel = new AddEquipmentViewModel(70 * Equipments.Count);
+            _ioService.ShowDialog(viewModel);
+            if (viewModel.Result)
+            {
+                Equipments.Add(viewModel.ToEquipmentViewModel());
+            }
+        }
 
         private void ExecuteSelect()
         {
@@ -49,20 +62,11 @@ namespace EquipmentManager.ViewModel
             }
         }
 
-        private void ExecuteAddMock()
-        {
-            var random = new Random(DateTime.Now.Millisecond);
-            var equipmentName = "WR00" + random.Next(10);
-            Equipments.Add(new EquipmentViewModel(equipmentName, random.Next(50, 100))
-            {
-                PackageCode = "4KG",
-                Status = (EquipmentStatus)(random.Next(10)/4)
-            });
-        }
-
         #endregion
 
         #region Fields
+
+        private readonly IIOService _ioService;
 
         private EquipmentViewModel _selectedEquipment;
         private string _goalEquipmentId;
@@ -72,12 +76,14 @@ namespace EquipmentManager.ViewModel
             new EquipmentViewModel("WR001")
             {
                 PackageCode = "4KG",
-                Status = EquipmentStatus.Running
+                Status = EquipmentStatus.Running,
+                Left = 5
             },
-            new EquipmentViewModel("WR002",100)
+            new EquipmentViewModel("WR002", 100)
             {
                 PackageCode = "2KG",
-                Status = EquipmentStatus.OffLine
+                Status = EquipmentStatus.OffLine,
+                Left = 70
             },
         };
 

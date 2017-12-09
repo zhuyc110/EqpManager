@@ -3,13 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:EquipmentManager.View"
              xmlns:viewModel="clr-namespace:EquipmentManager.ViewModel"
-             xmlns:equipment="clr-namespace:EquipmentManager.ViewModel.Equipment"
-             xmlns:controls="clr-namespace:EquipmentManager.Controls"
              d:DataContext="{d:DesignInstance {x:Type viewModel:MainViewModel}, IsDesignTimeCreatable=True}"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/EquipmentViewStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -22,30 +26,14 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Row="0" Grid.Column="0">
             <TextBlock Text="EQP id" VerticalAlignment="Center" />
-            <TextBox Margin="5" Text="{Binding Path=GoalEquipmentId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" MinWidth="80" />
-            <Button Margin="5" Content="查询" VerticalAlignment="Center" Command="{Binding Path=SelectCommand}"/>
+            <TextBox Margin="5" Text="{Binding Path=GoalEquipmentId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"
+                     MinWidth="80" />
+            <Button Margin="5" Content="查询" VerticalAlignment="Center" Command="{Binding Path=SelectCommand}" />
         </DockPanel>
-        <Button Grid.Row="0" Grid.Column="1" Margin="5" Content="添加" VerticalAlignment="Center" Command="{Binding Path=AddMockCommand}"/>
+        <Button Grid.Row="0" Grid.Column="1" Margin="5" Content="添加" VerticalAlignment="Center" Command="{Binding Path=AddMockCommand}" />
 
 
         <ListView Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type equipment:EquipmentViewModel}">
-                    <controls:EquipmentControl x:Name="EquipmentControl"
-                        EquipmentId="{Binding Path=EquipmentId}" 
-                                               PackageCode="{Binding Path=PackageCode}" 
-                                               StatusChangeTime="{Binding Path=StatusChangedTime}"
-                                               Status="{Binding Path=Status}"
-                                               Height="{Binding Path=Height}">
-                    </controls:EquipmentControl>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                  ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}" Style="{StaticResource EquipmentViewControlStyle}" />
     </Grid>
 </UserControl>

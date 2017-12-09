@@ -74,10 +74,18 @@
       <DependentUpon>EquipmentControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\EquipmentStatusToBrushConverter.cs" />
+    <Compile Include="Infrastructure\DialogSetting.cs" />
+    <Compile Include="Infrastructure\DialogViewModel.cs" />
+    <Compile Include="Infrastructure\IIOService.cs" />
+    <Compile Include="Infrastructure\IOService.cs" />
     <Compile Include="Infrastructure\IView.cs" />
+    <Compile Include="ViewModel\Equipment\AddEquipmentViewModel.cs" />
     <Compile Include="ViewModel\Equipment\EquipmentStatus.cs" />
     <Compile Include="ViewModel\Equipment\EquipmentViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="View\AddEquipmentView.xaml.cs">
+      <DependentUpon>AddEquipmentView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -98,6 +106,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\EquipmentViewStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddEquipmentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -5,7 +5,7 @@ namespace EquipmentManager.ViewModel.Equipment
 {
     public class EquipmentViewModel : BindableBase
     {
-        public string EquipmentId { get; }
+        public string EquipmentId { get; set; }
 
         public string PackageCode
         {
@@ -13,7 +13,7 @@ namespace EquipmentManager.ViewModel.Equipment
             set => SetProperty(ref _packageCode, value);
         }
 
-        public int Height { get; }
+        public int Height { get; set; }
 
         public string StatusChangedTime => _statusChangedTime.ToShortTimeString();
 
@@ -21,6 +21,18 @@ namespace EquipmentManager.ViewModel.Equipment
         {
             get => _status;
             set => SetProperty(ref _status, value);
+        }
+
+        public int Top
+        {
+            get => _top;
+            set => SetProperty(ref _top, value);
+        }
+
+        public int Left
+        {
+            get => _left;
+            set => SetProperty(ref _left, value);
         }
 
         public EquipmentViewModel(string equipmentId, int height = 56)
@@ -31,6 +43,9 @@ namespace EquipmentManager.ViewModel.Equipment
         }
 
         #region Fields
+
+        private int _top = 5;
+        private int _left;
 
         private DateTime _statusChangedTime;
 
