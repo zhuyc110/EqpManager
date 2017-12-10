@@ -27,7 +27,34 @@
                                                PackageCode="{Binding Path=PackageCode}"
                                                StatusChangeTime="{Binding Path=StatusChangedTime}"
                                                Status="{Binding Path=Status}"
-                                               Height="{Binding Path=Height}" />
+                                               Height="{Binding Path=Height}">
+                        <controls:EquipmentControl.ToolTip>
+                            <Grid MinWidth="200">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Equipment ID" />
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=EquipmentId}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Package Code" />
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=PackageCode}" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Status" />
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Status}" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Status Time" />
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=StatusChangedDetailTime}" />
+
+                            </Grid>
+                        </controls:EquipmentControl.ToolTip>
+                    </controls:EquipmentControl>
                 </DataTemplate>
             </Setter.Value>
         </Setter>
