@@ -21,6 +21,8 @@ namespace EquipmentManager.ViewModel.Equipment
 
         public int Height { get; set; }
 
+        public EquipmentStatus Status { get; set; }
+
         public AddEquipmentViewModel(int left = 0)
         {
             ApllyCommand = new DelegateCommand(ExecuteApply);
@@ -36,7 +38,8 @@ namespace EquipmentManager.ViewModel.Equipment
             {
                 Left = Left,
                 Top = Top,
-                PackageCode = PackageCode
+                PackageCode = PackageCode,
+                Status = Status
             };
         }
 
