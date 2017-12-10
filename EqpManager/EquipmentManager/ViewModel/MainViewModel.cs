@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
@@ -32,6 +33,30 @@ namespace EquipmentManager.ViewModel
             set => SetProperty(ref _goalEquipmentId, value);
         }
 
+        public int RunningEquipmentAmout
+        {
+            get => _runningEquipmentAmout;
+            set => SetProperty(ref _runningEquipmentAmout, value);
+        }
+
+        public int PmEquipmentAmout
+        {
+            get => _pmEquipmentAmout;
+            set => SetProperty(ref _pmEquipmentAmout, value);
+        }
+
+        public int DownEquipmentAmout
+        {
+            get => _downEquipmentAmout;
+            set => SetProperty(ref _downEquipmentAmout, value);
+        }
+
+        public int OffLineEquipmentAmout
+        {
+            get => _offLineEquipmentAmout;
+            set => SetProperty(ref _offLineEquipmentAmout, value);
+        }
+
         [ImportingConstructor]
         public MainViewModel(IIOService ioService)
         {
@@ -39,9 +64,17 @@ namespace EquipmentManager.ViewModel
             SelectCommand = new DelegateCommand(ExecuteSelect);
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
             Equipments = new ObservableCollection<EquipmentViewModel>(_testItems);
+            Equipments.CollectionChanged += EquipmentsCollectionChanged;
+
+            RefreshData();
         }
 
         #region Private methods
+
+        private void EquipmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            RefreshData();
+        }
 
         private void ExecuteAddMock()
         {
@@ -60,6 +93,14 @@ namespace EquipmentManager.ViewModel
             {
                 SelectedEquipment = goal;
             }
+        }
+
+        private void RefreshData()
+        {
+            RunningEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.Running);
+            PmEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.Pm);
+            DownEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.Down);
+            OffLineEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.OffLine);
         }
 
         #endregion
@@ -86,6 +127,11 @@ namespace EquipmentManager.ViewModel
                 Left = 70
             },
         };
+
+        private int _runningEquipmentAmout;
+        private int _pmEquipmentAmout;
+        private int _downEquipmentAmout;
+        private int _offLineEquipmentAmout;
 
         #endregion
     }
