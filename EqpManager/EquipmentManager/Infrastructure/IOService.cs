@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows;
+using System.Windows.Forms;
 using Microsoft.Practices.ServiceLocation;
+using Application = System.Windows.Application;
 
 namespace EquipmentManager.Infrastructure
 {
@@ -15,6 +17,20 @@ namespace EquipmentManager.Infrastructure
         }
 
         #region IIOService Members
+
+        public string OpenFileDialog(string title, string filter, bool multiselect)
+        {
+            using (var ofd = new OpenFileDialog {Filter = filter, Multiselect = multiselect, Title = title})
+            {
+                var result = ofd.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    return ofd.FileName;
+                }
+            }
+
+            return string.Empty;
+        }
 
         public void ShowDialog<TViewModel>(TViewModel viewModel, DialogSetting dialogSetting = null) where TViewModel : DialogViewModel
         {

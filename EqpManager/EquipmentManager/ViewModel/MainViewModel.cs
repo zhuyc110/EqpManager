@@ -6,6 +6,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
+using EquipmentManager.Interact;
 using EquipmentManager.ViewModel.Equipment;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -26,6 +27,7 @@ namespace EquipmentManager.ViewModel
 
         public ICommand SelectCommand { get; }
         public ICommand AddMockCommand { get; }
+        public ICommand ExportCommand { get; }
 
         public string GoalEquipmentId
         {
@@ -58,11 +60,13 @@ namespace EquipmentManager.ViewModel
         }
 
         [ImportingConstructor]
-        public MainViewModel(IIOService ioService)
+        public MainViewModel(IIOService ioService, IEquipmentPositionManager equipmentPositionManager)
         {
             _ioService = ioService;
+            _equipmentPositionManager = equipmentPositionManager;
             SelectCommand = new DelegateCommand(ExecuteSelect);
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
+            ExportCommand = new DelegateCommand(ExecuteExport);
             Equipments = new ObservableCollection<EquipmentViewModel>(_testItems);
             Equipments.CollectionChanged += EquipmentsCollectionChanged;
 
@@ -84,6 +88,11 @@ namespace EquipmentManager.ViewModel
             {
                 Equipments.Add(viewModel.ToEquipmentViewModel());
             }
+        }
+
+        private void ExecuteExport()
+        {
+            _equipmentPositionManager.Export(Equipments);
         }
 
         private void ExecuteSelect()
@@ -108,6 +117,7 @@ namespace EquipmentManager.ViewModel
         #region Fields
 
         private readonly IIOService _ioService;
+        private readonly IEquipmentPositionManager _equipmentPositionManager;
 
         private EquipmentViewModel _selectedEquipment;
         private string _goalEquipmentId;

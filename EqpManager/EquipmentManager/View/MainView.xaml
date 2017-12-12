@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:EquipmentManager.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              d:DataContext="{d:DesignInstance {x:Type viewModel:MainViewModel}, IsDesignTimeCreatable=True}"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
@@ -14,6 +15,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -32,27 +35,33 @@
         </DockPanel>
         <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text=" Runing" Margin="2" Background="DodgerBlue"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=RunningEquipmentAmout}" Margin="2"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Text=" PM" Margin="2" Background="OrangeRed"/>
-            <TextBlock Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=PmEquipmentAmout}" Margin="2"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text=" Down" Margin="2" Background="Red"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=DownEquipmentAmout}" Margin="2"/>
-            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Text=" Off" Margin="2" Background="Gray"/>
-            <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=OffLineEquipmentAmout}" Margin="2"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text=" Runing" Margin="2" Background="DodgerBlue" />
+            <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=RunningEquipmentAmout}" Margin="2" />
+            <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Text=" PM" Margin="2" Background="OrangeRed" />
+            <TextBlock Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=PmEquipmentAmout}" Margin="2" />
+            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text=" Down" Margin="2" Background="Red" />
+            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=DownEquipmentAmout}" Margin="2" />
+            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Text=" Off" Margin="2" Background="Gray" />
+            <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=OffLineEquipmentAmout}" Margin="2" />
         </Grid>
-        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加" VerticalAlignment="Center" Command="{Binding Path=AddMockCommand}" />
-
-        <ListView Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}" Style="{StaticResource EquipmentViewControlStyle}" />
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加" VerticalAlignment="Top" Command="{Binding Path=AddMockCommand}" />
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="导出" VerticalAlignment="Bottom" Command="{Binding Path=ExportCommand}" />
+        <DockPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Margin="2" >
+            <xctk:Zoombox MinScale="0.75">
+                <!-- https://github.com/xceedsoftware/wpftoolkit/wiki/Zoombox -->
+                <ListView Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MinWidth="560" MinHeight="294"
+                          ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}"
+                          Style="{StaticResource EquipmentViewControlStyle}" />
+            </xctk:Zoombox>
+        </DockPanel>
     </Grid>
 </UserControl>
