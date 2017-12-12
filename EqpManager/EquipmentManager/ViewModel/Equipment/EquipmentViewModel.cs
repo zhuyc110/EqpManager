@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Controls;
 using Prism.Mvvm;
 
 namespace EquipmentManager.ViewModel.Equipment
@@ -7,8 +6,6 @@ namespace EquipmentManager.ViewModel.Equipment
     public class EquipmentViewModel : BindableBase
     {
         public string EquipmentId { get; set; }
-
-        public Control ToolTip => new Button();
 
         public string PackageCode
         {

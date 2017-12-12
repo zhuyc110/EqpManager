@@ -60,17 +60,22 @@ namespace EquipmentManager.ViewModel
         }
 
         [ImportingConstructor]
-        public MainViewModel(IIOService ioService, IEquipmentPositionManager equipmentPositionManager)
+        public MainViewModel(IIOService ioService, IEquipmentLayoutManager equipmentLayoutManager)
         {
             _ioService = ioService;
-            _equipmentPositionManager = equipmentPositionManager;
+            _equipmentLayoutManager = equipmentLayoutManager;
             SelectCommand = new DelegateCommand(ExecuteSelect);
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
             ExportCommand = new DelegateCommand(ExecuteExport);
-            Equipments = new ObservableCollection<EquipmentViewModel>(_testItems);
+            Equipments = new ObservableCollection<EquipmentViewModel>();
             Equipments.CollectionChanged += EquipmentsCollectionChanged;
-
+            _equipmentLayoutManager.DataInitialized += EquipmentLayoutManagerDataInitialized;
             RefreshData();
+        }
+
+        private void EquipmentLayoutManagerDataInitialized(object sender, EventArgs e)
+        {
+            _equipmentLayoutManager.Synchronize(Equipments);
         }
 
         #region Private methods
@@ -92,7 +97,7 @@ namespace EquipmentManager.ViewModel
 
         private void ExecuteExport()
         {
-            _equipmentPositionManager.Export(Equipments);
+            _equipmentLayoutManager.Export(Equipments);
         }
 
         private void ExecuteSelect()
@@ -117,7 +122,7 @@ namespace EquipmentManager.ViewModel
         #region Fields
 
         private readonly IIOService _ioService;
-        private readonly IEquipmentPositionManager _equipmentPositionManager;
+        private readonly IEquipmentLayoutManager _equipmentLayoutManager;
 
         private EquipmentViewModel _selectedEquipment;
         private string _goalEquipmentId;

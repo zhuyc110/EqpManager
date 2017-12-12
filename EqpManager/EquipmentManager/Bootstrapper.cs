@@ -4,6 +4,7 @@ using System.Windows;
 using EquipmentManager.Config;
 using EquipmentManager.Properties;
 using EquipmentManager.View;
+using log4net;
 using Prism.Mef;
 using Prism.Regions;
 
@@ -34,9 +35,13 @@ namespace EquipmentManager
         {
             Container.GetExportedValue<IRegionManager>().RegisterViewWithRegion("MainRegion", typeof(MainView));
 
+            Log.Info("-- Starts main window --");
             Application.Current.MainWindow?.Show();
         }
 
         #endregion
+
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Bootstrapper));
     }
 }

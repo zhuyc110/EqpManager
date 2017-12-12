@@ -7,15 +7,18 @@ using System.Xml.Serialization;
 using EquipmentManager.Config;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.ViewModel.Equipment;
+using log4net;
 
 namespace EquipmentManager.Interact
 {
-    [Export(typeof(IEquipmentPositionManager))]
+    [Export(typeof(IEquipmentLayoutManager))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class EquipmentPositionManager : IEquipmentPositionManager
+    public class EquipmentLayoutManager : IEquipmentLayoutManager
     {
+        public event EventHandler DataInitialized;
+
         [ImportingConstructor]
-        public EquipmentPositionManager(IIOService ioService, IAppSetting appSetting)
+        public EquipmentLayoutManager(IIOService ioService, IAppSetting appSetting)
         {
             _ioService = ioService;
             _appSetting = appSetting;
@@ -56,8 +59,28 @@ namespace EquipmentManager.Interact
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
+                Log.Error($"Can not serialize file {_appSetting.ExportFilePath}", exception);
             }
+        }
+
+        public void Initialize()
+        {
+            try
+            {
+                var xmlSerializer = new XmlSerializer(typeof(EquipmentPositionDataHolder));
+                using (var fileStream = new FileStream(_appSetting.ExportFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var stream = new StreamReader(fileStream))
+                    {
+                        EquipmentPositionDatas = (EquipmentPositionDataHolder) xmlSerializer.Deserialize(stream);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Log.Error($"Can not deserialize file {_appSetting.ExportFilePath}", exception);
+            }
+            DataInitialized?.Invoke(null, EventArgs.Empty);
         }
 
         public void Synchronize(IList<EquipmentViewModel> equipments)
@@ -71,6 +94,14 @@ namespace EquipmentManager.Interact
                     viewModel.Left = positionData.Left;
                     viewModel.Top = positionData.Top;
                 }
+                else
+                {
+                    equipments.Add(new EquipmentViewModel(positionData.EquipmentId, positionData.Size)
+                    {
+                        Left = positionData.Left,
+                        Top = positionData.Top
+                    });
+                }
             }
         }
 
@@ -82,6 +113,8 @@ namespace EquipmentManager.Interact
         private readonly IAppSetting _appSetting;
 
         protected EquipmentPositionDataHolder EquipmentPositionDatas;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(EquipmentLayoutManager));
 
         #endregion
     }
