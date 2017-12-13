@@ -31,14 +31,14 @@
                         <controls:EquipmentControl.ToolTip>
                             <Grid MinWidth="200">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"></RowDefinition>
-                                    <RowDefinition Height="*"></RowDefinition>
-                                    <RowDefinition Height="*"></RowDefinition>
-                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Equipment ID" />
                                 <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=EquipmentId}" />

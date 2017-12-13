@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:EquipmentManager.ViewModel"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              d:DataContext="{d:DesignInstance {x:Type viewModel:MainViewModel}, IsDesignTimeCreatable=True}"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
@@ -55,13 +56,16 @@
         </Grid>
         <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加" VerticalAlignment="Top" Command="{Binding Path=AddMockCommand}" />
         <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="导出" VerticalAlignment="Bottom" Command="{Binding Path=ExportCommand}" />
-        <DockPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Margin="2" >
-            <xctk:Zoombox MinScale="0.75">
-                <!-- https://github.com/xceedsoftware/wpftoolkit/wiki/Zoombox -->
-                <ListView Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MinWidth="560" MinHeight="294"
-                          ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}"
-                          Style="{StaticResource EquipmentViewControlStyle}" />
-            </xctk:Zoombox>
-        </DockPanel>
+        <xctk:Zoombox MinScale="0.75" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" IsUsingScrollBars="True">
+            <!-- https://github.com/xceedsoftware/wpftoolkit/wiki/Zoombox -->
+            <ListView Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MinWidth="560" MinHeight="294"
+                      ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}"
+                      dd:DragDrop.IsDragSource="True"
+                      dd:DragDrop.IsDropTarget="True"
+                      dd:DragDrop.DropHandler="{Binding}"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      Style="{StaticResource EquipmentViewControlStyle}" />
+        </xctk:Zoombox>
     </Grid>
 </UserControl>

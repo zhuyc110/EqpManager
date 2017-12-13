@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.Interact;
 using EquipmentManager.ViewModel.Equipment;
+using GongSolutions.Wpf.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -15,7 +16,7 @@ namespace EquipmentManager.ViewModel
 {
     [Export(typeof(MainViewModel))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class MainViewModel : BindableBase
+    public class MainViewModel : BindableBase, IDropTarget
     {
         public ObservableCollection<EquipmentViewModel> Equipments { get; }
 
@@ -73,12 +74,41 @@ namespace EquipmentManager.ViewModel
             RefreshData();
         }
 
+        #region IDropTarget Members
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data == null)
+            {
+                return;
+            }
+
+            if (SelectedEquipment == dropInfo.Data && dropInfo.TargetItem == null)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Move;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            var sourceItem = dropInfo.Data as EquipmentViewModel;
+            if (sourceItem != null)
+            {
+                sourceItem.Left = (int) dropInfo.DropPosition.X - 25;
+                sourceItem.Top = (int) dropInfo.DropPosition.Y - sourceItem.Height / 2;
+                SelectedEquipment = null;
+            }
+        }
+
+        #endregion
+
+        #region Private methods
+
         private void EquipmentLayoutManagerDataInitialized(object sender, EventArgs e)
         {
             _equipmentLayoutManager.Synchronize(Equipments);
         }
-
-        #region Private methods
 
         private void EquipmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -91,7 +121,16 @@ namespace EquipmentManager.ViewModel
             _ioService.ShowDialog(viewModel);
             if (viewModel.Result)
             {
-                Equipments.Add(viewModel.ToEquipmentViewModel());
+                var existingItem = Equipments.FirstOrDefault(x => x.EquipmentId == viewModel.EquipmentId);
+                if (existingItem != null)
+                {
+                    existingItem.Height = viewModel.Height;
+                    existingItem.Status = viewModel.Status;
+                }
+                else
+                {
+                    Equipments.Add(viewModel.ToEquipmentViewModel());
+                }
             }
         }
 
@@ -126,22 +165,6 @@ namespace EquipmentManager.ViewModel
 
         private EquipmentViewModel _selectedEquipment;
         private string _goalEquipmentId;
-
-        private readonly List<EquipmentViewModel> _testItems = new List<EquipmentViewModel>
-        {
-            new EquipmentViewModel("WR001")
-            {
-                PackageCode = "4KG",
-                Status = EquipmentStatus.Running,
-                Left = 5
-            },
-            new EquipmentViewModel("WR002", 100)
-            {
-                PackageCode = "2KG",
-                Status = EquipmentStatus.OffLine,
-                Left = 70
-            },
-        };
 
         private int _runningEquipmentAmout;
         private int _pmEquipmentAmout;
