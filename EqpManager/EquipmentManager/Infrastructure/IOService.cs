@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 using Microsoft.Practices.ServiceLocation;
 using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace EquipmentManager.Infrastructure
 {
@@ -32,11 +34,29 @@ namespace EquipmentManager.Infrastructure
             return string.Empty;
         }
 
+        public void ShowDialog(string title, string message)
+        {
+            MessageBox.Show(message, title);
+        }
+
         public void ShowDialog<TViewModel>(TViewModel viewModel, DialogSetting dialogSetting = null) where TViewModel : DialogViewModel
         {
             var view = _serviceLocator.GetInstance<IView<TViewModel>>();
             view.ViewModel = viewModel;
             ShowView(viewModel, view, dialogSetting);
+        }
+
+        public void SetCursorBusy()
+        {
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+        }
+
+        public void ReleaseCursor()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            });
         }
 
         #endregion

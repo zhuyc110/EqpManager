@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using EquipmentManager.Config;
 using EquipmentManager.Infrastructure;
@@ -16,6 +17,7 @@ namespace EquipmentManager.Interact
     public class EquipmentLayoutManager : IEquipmentLayoutManager
     {
         public event EventHandler DataInitialized;
+        public event EventHandler EquipmentDataExported;
 
         [ImportingConstructor]
         public EquipmentLayoutManager(IIOService ioService, IAppSetting appSetting)
@@ -25,9 +27,9 @@ namespace EquipmentManager.Interact
             EquipmentPositionDatas = EquipmentPositionDataHolder.CreateDefault();
         }
 
-        #region IEquipmentPositionManager Members
+        #region IEquipmentLayoutManager Members
 
-        public void Export(IList<EquipmentViewModel> equipments)
+        public async Task Export(IList<EquipmentViewModel> equipments)
         {
             var filePath = _ioService.OpenFileDialog("Select file", "export file|*.export;*.txt", false);
             if (string.IsNullOrWhiteSpace(filePath))
@@ -35,7 +37,8 @@ namespace EquipmentManager.Interact
                 return;
             }
 
-            _appSetting.SetExportFilePath(filePath);
+            _appSetting.ExportFilePath = filePath;
+            _appSetting.Save();
 
             EquipmentPositionDatas.EquipmentPositionDatas.Clear();
             EquipmentPositionDatas.EquipmentPositionDatas.AddRange(equipments.Select(x => new EquipmentPositionData
@@ -46,21 +49,29 @@ namespace EquipmentManager.Interact
                 Size = x.Height
             }));
 
-            try
-            {
-                var xmlSerializer = new XmlSerializer(typeof(EquipmentPositionDataHolder));
-                using (var fileStream = new FileStream(_appSetting.ExportFilePath, FileMode.OpenOrCreate, FileAccess.Write))
+            await new TaskFactory().StartNew(() =>
                 {
-                    using (var stream = new StreamWriter(fileStream))
+                    try
                     {
-                        xmlSerializer.Serialize(stream, EquipmentPositionDatas);
+                        var xmlSerializer = new XmlSerializer(typeof(EquipmentPositionDataHolder));
+                        using (var fileStream = new FileStream(_appSetting.ExportFilePath, FileMode.Create, FileAccess.Write))
+                        {
+                            using (var stream = new StreamWriter(fileStream))
+                            {
+                                xmlSerializer.Serialize(stream, EquipmentPositionDatas);
+                            }
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Error($"Can not serialize file {_appSetting.ExportFilePath}", exception);
+                    }
+                    finally
+                    {
+                        EquipmentDataExported?.Invoke(null, EventArgs.Empty);
                     }
                 }
-            }
-            catch (Exception exception)
-            {
-                Log.Error($"Can not serialize file {_appSetting.ExportFilePath}", exception);
-            }
+            );
         }
 
         public void Initialize()

@@ -1,17 +1,18 @@
-﻿using EquipmentManager.Config;
+﻿using System.Configuration;
+using System.Diagnostics;
+using EquipmentManager.Config;
 
 namespace EquipmentManager.Properties
 {
     internal sealed partial class Settings : IAppSetting
     {
-        #region IAppSetting Members
-
-        public void SetExportFilePath(string filePath)
+        [UserScopedSetting]
+        [DebuggerNonUserCode]
+        [DefaultSettingValue("C:\\")]
+        public string ExportFilePath
         {
-            this["ExportFilePath"] = filePath;
-            Save();
+            get => ((string) (this["ExportFilePath"]));
+            set => this["ExportFilePath"] = value;
         }
-
-        #endregion
     }
 }

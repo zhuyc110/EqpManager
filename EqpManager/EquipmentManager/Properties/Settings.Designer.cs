@@ -22,17 +22,5 @@ namespace EquipmentManager.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\")]
-        public string ExportFilePath {
-            get {
-                return ((string)(this["ExportFilePath"]));
-            }
-            set {
-                this["ExportFilePath"] = value;
-            }
-        }
     }
 }

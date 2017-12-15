@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
@@ -30,6 +31,8 @@ namespace EquipmentManager.ViewModel
         public ICommand AddMockCommand { get; }
         public ICommand ExportCommand { get; }
 
+        public DelegateCommand ResetScaleCommand { get; }
+
         public string GoalEquipmentId
         {
             get => _goalEquipmentId;
@@ -46,6 +49,16 @@ namespace EquipmentManager.ViewModel
         {
             get => _pmEquipmentAmout;
             set => SetProperty(ref _pmEquipmentAmout, value);
+        }
+
+        public double ScaleValue
+        {
+            get => _scaleValue;
+            set
+            {
+                SetProperty(ref _scaleValue, value);
+                ResetScaleCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public int DownEquipmentAmout
@@ -67,11 +80,20 @@ namespace EquipmentManager.ViewModel
             _equipmentLayoutManager = equipmentLayoutManager;
             SelectCommand = new DelegateCommand(ExecuteSelect);
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
-            ExportCommand = new DelegateCommand(ExecuteExport);
+            ExportCommand = new DelegateCommand(async () => await ExecuteExport());
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            ResetScaleCommand = new DelegateCommand(() => ScaleValue = 1, () => ScaleValue != 1);
             Equipments = new ObservableCollection<EquipmentViewModel>();
             Equipments.CollectionChanged += EquipmentsCollectionChanged;
             _equipmentLayoutManager.DataInitialized += EquipmentLayoutManagerDataInitialized;
+            _equipmentLayoutManager.EquipmentDataExported += EquipmentLayoutManagerEquipmentDataExported;
             RefreshData();
+        }
+
+        private void EquipmentLayoutManagerEquipmentDataExported(object sender, EventArgs e)
+        {
+            _ioService.ReleaseCursor();
+            _ioService.ShowDialog("导出", "导出成功");
         }
 
         #region IDropTarget Members
@@ -95,8 +117,8 @@ namespace EquipmentManager.ViewModel
             var sourceItem = dropInfo.Data as EquipmentViewModel;
             if (sourceItem != null)
             {
-                sourceItem.Left = (int) dropInfo.DropPosition.X - 25;
-                sourceItem.Top = (int) dropInfo.DropPosition.Y - sourceItem.Height / 2;
+                sourceItem.Left = Math.Max((int) dropInfo.DropPosition.X - 25, 0);
+                sourceItem.Top = Math.Max((int) dropInfo.DropPosition.Y - sourceItem.Height / 2, 0);
                 SelectedEquipment = null;
             }
         }
@@ -134,9 +156,10 @@ namespace EquipmentManager.ViewModel
             }
         }
 
-        private void ExecuteExport()
+        private async Task ExecuteExport()
         {
-            _equipmentLayoutManager.Export(Equipments);
+            _ioService.SetCursorBusy();
+            await _equipmentLayoutManager.Export(Equipments);
         }
 
         private void ExecuteSelect()
@@ -170,6 +193,7 @@ namespace EquipmentManager.ViewModel
         private int _pmEquipmentAmout;
         private int _downEquipmentAmout;
         private int _offLineEquipmentAmout;
+        private double _scaleValue = 1;
 
         #endregion
     }

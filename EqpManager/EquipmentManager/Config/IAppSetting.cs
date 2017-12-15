@@ -2,8 +2,8 @@
 {
     public interface IAppSetting
     {
-        string ExportFilePath { get; }
+        string ExportFilePath { get; set; }
 
-        void SetExportFilePath(string filePath);
+        void Save();
     }
 }
