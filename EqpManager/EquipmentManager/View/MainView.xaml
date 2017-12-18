@@ -57,28 +57,16 @@
         </Grid>
         <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加" VerticalAlignment="Top" Command="{Binding Path=AddMockCommand}" />
         <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="导出" VerticalAlignment="Bottom" Command="{Binding Path=ExportCommand}" />
-        <!--<xctk:Zoombox MinScale="0.75" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" IsUsingScrollBars="True">-->
-            <!-- https://github.com/xceedsoftware/wpftoolkit/wiki/Zoombox -->
-        <ListView Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" 
-                  Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        <xctk:Zoombox x:Name="Zoombox" MinScale="0.75" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" IsUsingScrollBars="True" KeepContentInBounds="True">
+            <ListView Width="{Binding ElementName=Zoombox, Path=ActualWidth}" Height="{Binding ElementName=Zoombox, Path=ActualHeight}"
+                      Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}"
                       dd:DragDrop.IsDragSource="True"
                       dd:DragDrop.IsDropTarget="True"
                       dd:DragDrop.DropHandler="{Binding}"
                       VerticalAlignment="Stretch"
                       HorizontalAlignment="Stretch"
-                      Style="{StaticResource EquipmentViewControlStyle}" >
-            <ListView.LayoutTransform>
-                <ScaleTransform CenterX="0" CenterY="0"
-                                ScaleX="{Binding ScaleValue}"
-                                ScaleY="{Binding ScaleValue}" />
-            </ListView.LayoutTransform>
-        </ListView>
-        <DockPanel Grid.Column="2" Grid.Row="1" Margin="15" VerticalAlignment="Top">
-            <Button VerticalAlignment="Top" Margin="2" Content="◇" Command="{Binding ResetScaleCommand}" ToolTip="重置"/>
-            <Slider x:Name="ScaleSlider" Margin="2"
-                    Value="{Binding Path=ScaleValue, Mode=TwoWay}" Minimum="0.75" Maximum="2" VerticalAlignment="Top"/>
-        </DockPanel>
-        <!--</xctk:Zoombox>-->
+                      Style="{StaticResource EquipmentViewControlStyle}"/>
+        </xctk:Zoombox>
     </Grid>
 </UserControl>
