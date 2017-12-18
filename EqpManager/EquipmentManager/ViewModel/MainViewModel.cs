@@ -24,7 +24,15 @@ namespace EquipmentManager.ViewModel
         public EquipmentViewModel SelectedEquipment
         {
             get => _selectedEquipment;
-            set => SetProperty(ref _selectedEquipment, value);
+            set
+            {
+                SetProperty(ref _selectedEquipment, value);
+                if (_selectedEquipment != null)
+                {
+                    ScaleTop = _selectedEquipment.Top;
+                    ScaleLeft = _selectedEquipment.Left;
+                }
+            }
         }
 
         public ICommand SelectCommand { get; }
@@ -59,6 +67,18 @@ namespace EquipmentManager.ViewModel
                 SetProperty(ref _scaleValue, value);
                 ResetScaleCommand.RaiseCanExecuteChanged();
             }
+        }
+
+        public double ScaleTop
+        {
+            get => _scaleTop;
+            set => SetProperty(ref _scaleTop, value);
+        }
+
+        public double ScaleLeft
+        {
+            get => _scaleLeft;
+            set => SetProperty(ref _scaleLeft, value);
         }
 
         public int DownEquipmentAmout
@@ -194,6 +214,8 @@ namespace EquipmentManager.ViewModel
         private int _downEquipmentAmout;
         private int _offLineEquipmentAmout;
         private double _scaleValue = 1;
+        private double _scaleTop;
+        private double _scaleLeft;
 
         #endregion
     }

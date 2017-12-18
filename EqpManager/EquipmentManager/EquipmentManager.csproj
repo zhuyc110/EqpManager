@@ -81,12 +81,19 @@
     <Compile Include="Controls\EquipmentControl.xaml.cs">
       <DependentUpon>EquipmentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PriorityQuadTree.cs" />
+    <Compile Include="Controls\VirtualPanel.cs" />
+    <Compile Include="Controls\ZoomableCanvas.cs" />
     <Compile Include="Converters\EquipmentStatusToBrushConverter.cs" />
+    <Compile Include="Extension\LinkedListExtensions.cs" />
+    <Compile Include="Extension\MathExtensions.cs" />
+    <Compile Include="Extension\RectExtensions.cs" />
     <Compile Include="Infrastructure\DialogSetting.cs" />
     <Compile Include="Infrastructure\DialogViewModel.cs" />
     <Compile Include="Infrastructure\IIOService.cs" />
     <Compile Include="Infrastructure\IOService.cs" />
     <Compile Include="Infrastructure\IView.cs" />
+    <Compile Include="Infrastructure\PriorityQueue.cs" />
     <Compile Include="Interact\EquipmentPositionData.cs" />
     <Compile Include="Interact\EquipmentPositionDataHolder.cs" />
     <Compile Include="Interact\EquipmentLayoutManager.cs" />

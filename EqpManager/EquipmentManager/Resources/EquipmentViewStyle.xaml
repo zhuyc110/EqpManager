@@ -7,7 +7,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <Canvas/>
+                    <controls:ZoomableCanvas/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
