@@ -65,6 +65,7 @@
                       ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}"
                       dd:DragDrop.IsDragSource="True"
                       dd:DragDrop.IsDropTarget="True"
+                      dd:DragDrop.DragHandler="{Binding Path=DragDropHandler}"
                       dd:DragDrop.DropHandler="{Binding}"
                       VerticalAlignment="Stretch"
                       HorizontalAlignment="Stretch"

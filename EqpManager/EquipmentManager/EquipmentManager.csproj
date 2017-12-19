@@ -112,6 +112,7 @@
     <Compile Include="Module\MainModule.cs" />
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="Resources\EquipmentViewItemTemplateSelector.cs" />
+    <Compile Include="Resources\MainViewDragDropHandler.cs" />
     <Compile Include="ViewModel\Equipment\AddEquipmentViewModel.cs" />
     <Compile Include="ViewModel\Equipment\BoundaryViewModel.cs" />
     <Compile Include="ViewModel\Equipment\EquipmentStatus.cs" />

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.Interact;
+using EquipmentManager.Resources;
 using EquipmentManager.ViewModel.Equipment;
 using GongSolutions.Wpf.DragDrop;
 using Prism.Commands;
@@ -74,9 +75,12 @@ namespace EquipmentManager.ViewModel
             set => SetProperty(ref _offLineEquipmentAmout, value);
         }
 
+        public MainViewDragDropHandler DragDropHandler { get; }
+
         [ImportingConstructor]
         public MainViewModel(IIOService ioService, IEquipmentLayoutManager equipmentLayoutManager)
         {
+            DragDropHandler = new MainViewDragDropHandler();
             _ioService = ioService;
             _equipmentLayoutManager = equipmentLayoutManager;
             SelectCommand = new DelegateCommand(ExecuteSelect);
@@ -91,7 +95,7 @@ namespace EquipmentManager.ViewModel
             _equipmentLayoutManager.EquipmentDataExported += EquipmentLayoutManagerEquipmentDataExported;
             RefreshData();
         }
-
+        
         #region IDropTarget Members
 
         public void DragOver(IDropInfo dropInfo)
@@ -101,10 +105,17 @@ namespace EquipmentManager.ViewModel
                 return;
             }
 
-            if (SelectedEquipment == dropInfo.Data && dropInfo.TargetItem == null)
+            if (SelectedEquipment == dropInfo.Data && (dropInfo.TargetItem == null || dropInfo.TargetItem == dropInfo.Data))
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                 dropInfo.Effects = DragDropEffects.Move;
+                var sourceItem = dropInfo.Data as IEquipmentViewVisibleModel;
+                if (sourceItem != null)
+                {
+                    var targetPosition = dropInfo.DropPosition - DragDropHandler.Delta;
+                    sourceItem.Left = Math.Max((int) targetPosition.X, 0);
+                    sourceItem.Top = Math.Max((int) targetPosition.Y, 0);
+                }
             }
         }
 
@@ -113,8 +124,6 @@ namespace EquipmentManager.ViewModel
             var sourceItem = dropInfo.Data as IEquipmentViewVisibleModel;
             if (sourceItem != null)
             {
-                sourceItem.Left = Math.Max((int) dropInfo.DropPosition.X - 25, 0);
-                sourceItem.Top = Math.Max((int) dropInfo.DropPosition.Y, 0);
                 SelectedEquipment = null;
             }
         }
@@ -139,17 +148,6 @@ namespace EquipmentManager.ViewModel
             RefreshData();
         }
 
-        private void ExecuteAddMockLine()
-        {
-            Equipments.Add(new BoundaryViewModel
-            {
-                Id = BoundaryViewModel.GetId(),
-                Left = 100,
-                Size = 50,
-                Top = 100
-            });
-        }
-
         private void ExecuteAddMock()
         {
             var viewModel = new AddEquipmentViewModel(70 * Equipments.Count);
@@ -167,6 +165,17 @@ namespace EquipmentManager.ViewModel
                     Equipments.Add(viewModel.ToEquipmentViewModel());
                 }
             }
+        }
+
+        private void ExecuteAddMockLine()
+        {
+            Equipments.Add(new BoundaryViewModel
+            {
+                Id = BoundaryViewModel.GetId(),
+                Left = 100,
+                Size = 50,
+                Top = 100
+            });
         }
 
         private async Task ExecuteExport()
