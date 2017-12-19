@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Controls;
 using EquipmentManager.Interact;
 using Prism.Mvvm;
 
@@ -19,6 +20,8 @@ namespace EquipmentManager.ViewModel.Equipment
         public int Size { get; set; }
 
         public bool IsEquipment => true;
+
+        public Orientation Orientation { get; }
 
         public string StatusChangedTime => _statusChangedTime.ToShortTimeString();
 

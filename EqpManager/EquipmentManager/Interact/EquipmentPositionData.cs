@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Controls;
 
 namespace EquipmentManager.Interact
 {
@@ -14,5 +15,7 @@ namespace EquipmentManager.Interact
         public int Size { get; set; }
 
         public bool IsEquipment { get; set; }
+
+        public Orientation Orientation { get; set; }
     }
 }

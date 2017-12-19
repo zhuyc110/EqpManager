@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.Interact;
@@ -169,11 +170,10 @@ namespace EquipmentManager.ViewModel
 
         private void ExecuteAddMockLine()
         {
-            Equipments.Add(new BoundaryViewModel
+            Equipments.Add(new BoundaryViewModel(Orientation.Horizontal, 100)
             {
                 Id = BoundaryViewModel.GetId(),
                 Left = 100,
-                Size = 50,
                 Top = 100
             });
         }

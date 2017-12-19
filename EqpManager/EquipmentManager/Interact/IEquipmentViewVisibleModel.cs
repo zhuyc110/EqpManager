@@ -1,4 +1,6 @@
-﻿namespace EquipmentManager.Interact
+﻿using System.Windows.Controls;
+
+namespace EquipmentManager.Interact
 {
     public interface IEquipmentViewVisibleModel
     {
@@ -11,5 +13,7 @@
         int Size { get; set; }
 
         bool IsEquipment { get; }
+
+        Orientation Orientation { get; }
     }
 }

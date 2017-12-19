@@ -47,7 +47,8 @@ namespace EquipmentManager.Interact
                 Left = x.Left,
                 Top = x.Top,
                 Size = x.Size,
-                IsEquipment = x.IsEquipment
+                IsEquipment = x.IsEquipment,
+                Orientation = x.Orientation
             }));
 
             await new TaskFactory().StartNew(() =>
@@ -118,10 +119,9 @@ namespace EquipmentManager.Interact
                     }
                     else
                     {
-                        equipments.Add(new BoundaryViewModel
+                        equipments.Add(new BoundaryViewModel(positionData.Orientation, positionData.Size)
                         {
-                            Id = positionData.Id,
-                            Size = positionData.Size,
+                            Id = BoundaryViewModel.GetId(),
                             Left = positionData.Left,
                             Top = positionData.Top
                         });
