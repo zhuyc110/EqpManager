@@ -14,7 +14,7 @@
     </Style>
 
     <DataTemplate x:Key="BoundartDataTemplate" DataType="equipment:BoundaryViewModel">
-        <Rectangle Width="{Binding Path=Height}" Height="2" Stroke="Black" />
+        <Rectangle Width="{Binding Path=Size}" Height="2" Stroke="Black" />
     </DataTemplate>
 
     <DataTemplate x:Key="EquipmentDataTemplate" DataType="equipment:EquipmentViewModel">
@@ -23,7 +23,7 @@
                                    PackageCode="{Binding Path=PackageCode}"
                                    StatusChangeTime="{Binding Path=StatusChangedTime}"
                                    Status="{Binding Path=Status}"
-                                   Height="{Binding Path=Height}"
+                                   Height="{Binding Path=Size}"
                                    Style="{StaticResource EquipmentControlStyle}">
             <controls:EquipmentControl.ToolTip>
                 <Grid MinWidth="200" Background="#A8D8B9" Margin="-5,-4">

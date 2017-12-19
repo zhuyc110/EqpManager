@@ -29,7 +29,7 @@ namespace EquipmentManager.Interact
 
         #region IEquipmentLayoutManager Members
 
-        public async Task Export(IList<EquipmentViewModel> equipments)
+        public async Task Export(IList<IEquipmentViewVisibleModel> equipments)
         {
             var filePath = _ioService.OpenFileDialog("Select file", "export file|*.export;*.txt", false);
             if (string.IsNullOrWhiteSpace(filePath))
@@ -43,10 +43,11 @@ namespace EquipmentManager.Interact
             EquipmentPositionDatas.EquipmentPositionDatas.Clear();
             EquipmentPositionDatas.EquipmentPositionDatas.AddRange(equipments.Select(x => new EquipmentPositionData
             {
-                EquipmentId = x.EquipmentId,
+                Id = x.Id,
                 Left = x.Left,
                 Top = x.Top,
-                Size = x.Height
+                Size = x.Size,
+                IsEquipment = x.IsEquipment
             }));
 
             await new TaskFactory().StartNew(() =>
@@ -94,24 +95,37 @@ namespace EquipmentManager.Interact
             DataInitialized?.Invoke(null, EventArgs.Empty);
         }
 
-        public void Synchronize(IList<EquipmentViewModel> equipments)
+        public void Synchronize(IList<IEquipmentViewVisibleModel> equipments)
         {
             foreach (var positionData in EquipmentPositionDatas.EquipmentPositionDatas)
             {
-                var viewModel = equipments.FirstOrDefault(x => x.EquipmentId == positionData.EquipmentId);
+                var viewModel = equipments.FirstOrDefault(x => x.Id == positionData.Id);
                 if (viewModel != null)
                 {
-                    viewModel.Height = positionData.Size;
+                    viewModel.Size = positionData.Size;
                     viewModel.Left = positionData.Left;
                     viewModel.Top = positionData.Top;
                 }
                 else
                 {
-                    equipments.Add(new EquipmentViewModel(positionData.EquipmentId, positionData.Size)
+                    if (positionData.IsEquipment)
                     {
-                        Left = positionData.Left,
-                        Top = positionData.Top
-                    });
+                        equipments.Add(new EquipmentViewModel(positionData.Id, positionData.Size)
+                        {
+                            Left = positionData.Left,
+                            Top = positionData.Top
+                        });
+                    }
+                    else
+                    {
+                        equipments.Add(new BoundaryViewModel
+                        {
+                            Id = positionData.Id,
+                            Size = positionData.Size,
+                            Left = positionData.Left,
+                            Top = positionData.Top
+                        });
+                    }
                 }
             }
         }

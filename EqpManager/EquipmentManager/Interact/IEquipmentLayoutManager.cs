@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EquipmentManager.ViewModel.Equipment;
 
 namespace EquipmentManager.Interact
 {
@@ -10,9 +9,9 @@ namespace EquipmentManager.Interact
         event EventHandler DataInitialized;
         event EventHandler EquipmentDataExported;
 
-        Task Export(IList<EquipmentViewModel> equipments);
+        Task Export(IList<IEquipmentViewVisibleModel> equipments);
 
-        void Synchronize(IList<EquipmentViewModel> equipments);
+        void Synchronize(IList<IEquipmentViewVisibleModel> equipments);
 
         void Initialize();
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
@@ -20,9 +19,9 @@ namespace EquipmentManager.ViewModel
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class MainViewModel : BindableBase, IDropTarget
     {
-        public ObservableCollection<IEquipmentViewVisibleViewModel> Equipments { get; }
+        public ObservableCollection<IEquipmentViewVisibleModel> Equipments { get; }
 
-        public IEquipmentViewVisibleViewModel SelectedEquipment
+        public IEquipmentViewVisibleModel SelectedEquipment
         {
             get => _selectedEquipment;
             set => SetProperty(ref _selectedEquipment, value);
@@ -82,11 +81,11 @@ namespace EquipmentManager.ViewModel
             _equipmentLayoutManager = equipmentLayoutManager;
             SelectCommand = new DelegateCommand(ExecuteSelect);
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
-            AddMockLineCommand = new DelegateCommand(ExecuteAddLine);
+            AddMockLineCommand = new DelegateCommand(ExecuteAddMockLine);
             ExportCommand = new DelegateCommand(async () => await ExecuteExport());
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             ResetScaleCommand = new DelegateCommand(() => ScaleValue = 1, () => ScaleValue != 1);
-            Equipments = new ObservableCollection<IEquipmentViewVisibleViewModel>();
+            Equipments = new ObservableCollection<IEquipmentViewVisibleModel>();
             Equipments.CollectionChanged += EquipmentsCollectionChanged;
             _equipmentLayoutManager.DataInitialized += EquipmentLayoutManagerDataInitialized;
             _equipmentLayoutManager.EquipmentDataExported += EquipmentLayoutManagerEquipmentDataExported;
@@ -111,7 +110,7 @@ namespace EquipmentManager.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            var sourceItem = dropInfo.Data as IEquipmentViewVisibleViewModel;
+            var sourceItem = dropInfo.Data as IEquipmentViewVisibleModel;
             if (sourceItem != null)
             {
                 sourceItem.Left = Math.Max((int) dropInfo.DropPosition.X - 25, 0);
@@ -126,9 +125,7 @@ namespace EquipmentManager.ViewModel
 
         private void EquipmentLayoutManagerDataInitialized(object sender, EventArgs e)
         {
-            var savedItems = new List<EquipmentViewModel>();
-            _equipmentLayoutManager.Synchronize(savedItems);
-            Equipments.AddRange(savedItems);
+            _equipmentLayoutManager.Synchronize(Equipments);
         }
 
         private void EquipmentLayoutManagerEquipmentDataExported(object sender, EventArgs e)
@@ -142,12 +139,13 @@ namespace EquipmentManager.ViewModel
             RefreshData();
         }
 
-        private void ExecuteAddLine()
+        private void ExecuteAddMockLine()
         {
             Equipments.Add(new BoundaryViewModel
             {
+                Id = BoundaryViewModel.GetId(),
                 Left = 100,
-                Height = 50,
+                Size = 50,
                 Top = 100
             });
         }
@@ -161,7 +159,7 @@ namespace EquipmentManager.ViewModel
                 var existingItem = Equipments.OfType<EquipmentViewModel>().FirstOrDefault(x => x.EquipmentId == viewModel.EquipmentId);
                 if (existingItem != null)
                 {
-                    existingItem.Height = viewModel.Height;
+                    existingItem.Size = viewModel.Height;
                     existingItem.Status = viewModel.Status;
                 }
                 else
@@ -174,7 +172,7 @@ namespace EquipmentManager.ViewModel
         private async Task ExecuteExport()
         {
             _ioService.SetCursorBusy();
-            await _equipmentLayoutManager.Export(Equipments.OfType<EquipmentViewModel>().ToList());
+            await _equipmentLayoutManager.Export(Equipments);
         }
 
         private void ExecuteSelect()
@@ -201,7 +199,7 @@ namespace EquipmentManager.ViewModel
         private readonly IIOService _ioService;
         private readonly IEquipmentLayoutManager _equipmentLayoutManager;
 
-        private IEquipmentViewVisibleViewModel _selectedEquipment;
+        private IEquipmentViewVisibleModel _selectedEquipment;
         private string _goalEquipmentId;
 
         private int _runningEquipmentAmout;

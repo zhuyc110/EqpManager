@@ -116,7 +116,7 @@
     <Compile Include="ViewModel\Equipment\BoundaryViewModel.cs" />
     <Compile Include="ViewModel\Equipment\EquipmentStatus.cs" />
     <Compile Include="ViewModel\Equipment\EquipmentViewModel.cs" />
-    <Compile Include="ViewModel\Equipment\IEquipmentViewVisibleViewModel.cs" />
+    <Compile Include="Interact\IEquipmentViewVisibleModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\AddEquipmentView.xaml.cs">
       <DependentUpon>AddEquipmentView.xaml</DependentUpon>

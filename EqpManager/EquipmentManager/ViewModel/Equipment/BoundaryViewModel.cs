@@ -1,10 +1,13 @@
 ﻿using System.Windows.Controls;
+using EquipmentManager.Interact;
 using Prism.Mvvm;
 
 namespace EquipmentManager.ViewModel.Equipment
 {
-    public class BoundaryViewModel : BindableBase, IEquipmentViewVisibleViewModel
+    public class BoundaryViewModel : BindableBase, IEquipmentViewVisibleModel
     {
+        public string Id { get; set; }
+
         public int Top
         {
             get => _top;
@@ -17,16 +20,25 @@ namespace EquipmentManager.ViewModel.Equipment
             set => SetProperty(ref _left, value);
         }
 
-        public int Height { get; set; }
+        public int Size { get; set; }
+
+        public bool IsEquipment => false;
 
         public Orientation Orientation { get; }
 
         public BoundaryViewModel()
         {
-            Height = 100;
+            Size = 100;
+        }
+
+        public static string GetId()
+        {
+            return _id++.ToString();
         }
 
         #region Fields
+
+        private static int _id;
 
         private int _top = 5;
         private int _left;

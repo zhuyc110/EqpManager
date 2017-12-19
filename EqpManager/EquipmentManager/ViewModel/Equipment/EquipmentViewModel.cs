@@ -1,10 +1,13 @@
 ﻿using System;
+using EquipmentManager.Interact;
 using Prism.Mvvm;
 
 namespace EquipmentManager.ViewModel.Equipment
 {
-    public class EquipmentViewModel : BindableBase, IEquipmentViewVisibleViewModel
+    public class EquipmentViewModel : BindableBase, IEquipmentViewVisibleModel
     {
+        public string Id => EquipmentId;
+
         public string EquipmentId { get; set; }
 
         public string PackageCode
@@ -13,7 +16,9 @@ namespace EquipmentManager.ViewModel.Equipment
             set => SetProperty(ref _packageCode, value);
         }
 
-        public int Height { get; set; }
+        public int Size { get; set; }
+
+        public bool IsEquipment => true;
 
         public string StatusChangedTime => _statusChangedTime.ToShortTimeString();
 
@@ -41,7 +46,7 @@ namespace EquipmentManager.ViewModel.Equipment
         {
             EquipmentId = equipmentId;
             _statusChangedTime = DateTime.Now;
-            Height = height;
+            Size = height;
         }
 
         #region Fields
