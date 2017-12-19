@@ -54,8 +54,9 @@
             <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Text=" Off" Margin="2" Background="Gray" />
             <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=OffLineEquipmentAmout}" Margin="2" />
         </Grid>
-        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加" VerticalAlignment="Top" Command="{Binding Path=AddMockCommand}" />
-        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="导出" VerticalAlignment="Bottom" Command="{Binding Path=ExportCommand}" />
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加line" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding Path=AddMockLineCommand}" />
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding Path=AddMockCommand}" />
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="导出" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding Path=ExportCommand}" />
         <xctk:Zoombox x:Name="Zoombox" MinScale="0.75" MaxScale="2"
                       Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" 
                       IsUsingScrollBars="True" Scale="{Binding Path=ScaleValue, Mode=TwoWay}" >

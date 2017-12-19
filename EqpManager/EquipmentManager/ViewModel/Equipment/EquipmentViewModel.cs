@@ -3,7 +3,7 @@ using Prism.Mvvm;
 
 namespace EquipmentManager.ViewModel.Equipment
 {
-    public class EquipmentViewModel : BindableBase
+    public class EquipmentViewModel : BindableBase, IEquipmentViewVisibleViewModel
     {
         public string EquipmentId { get; set; }
 

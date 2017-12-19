@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
@@ -19,9 +20,9 @@ namespace EquipmentManager.ViewModel
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class MainViewModel : BindableBase, IDropTarget
     {
-        public ObservableCollection<EquipmentViewModel> Equipments { get; }
+        public ObservableCollection<IEquipmentViewVisibleViewModel> Equipments { get; }
 
-        public EquipmentViewModel SelectedEquipment
+        public IEquipmentViewVisibleViewModel SelectedEquipment
         {
             get => _selectedEquipment;
             set => SetProperty(ref _selectedEquipment, value);
@@ -29,6 +30,7 @@ namespace EquipmentManager.ViewModel
 
         public ICommand SelectCommand { get; }
         public ICommand AddMockCommand { get; }
+        public ICommand AddMockLineCommand { get; }
         public ICommand ExportCommand { get; }
 
         public DelegateCommand ResetScaleCommand { get; }
@@ -80,20 +82,15 @@ namespace EquipmentManager.ViewModel
             _equipmentLayoutManager = equipmentLayoutManager;
             SelectCommand = new DelegateCommand(ExecuteSelect);
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
+            AddMockLineCommand = new DelegateCommand(ExecuteAddLine);
             ExportCommand = new DelegateCommand(async () => await ExecuteExport());
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             ResetScaleCommand = new DelegateCommand(() => ScaleValue = 1, () => ScaleValue != 1);
-            Equipments = new ObservableCollection<EquipmentViewModel>();
+            Equipments = new ObservableCollection<IEquipmentViewVisibleViewModel>();
             Equipments.CollectionChanged += EquipmentsCollectionChanged;
             _equipmentLayoutManager.DataInitialized += EquipmentLayoutManagerDataInitialized;
             _equipmentLayoutManager.EquipmentDataExported += EquipmentLayoutManagerEquipmentDataExported;
             RefreshData();
-        }
-
-        private void EquipmentLayoutManagerEquipmentDataExported(object sender, EventArgs e)
-        {
-            _ioService.ReleaseCursor();
-            _ioService.ShowDialog("导出", "导出成功");
         }
 
         #region IDropTarget Members
@@ -114,11 +111,11 @@ namespace EquipmentManager.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            var sourceItem = dropInfo.Data as EquipmentViewModel;
+            var sourceItem = dropInfo.Data as IEquipmentViewVisibleViewModel;
             if (sourceItem != null)
             {
                 sourceItem.Left = Math.Max((int) dropInfo.DropPosition.X - 25, 0);
-                sourceItem.Top = Math.Max((int) dropInfo.DropPosition.Y - sourceItem.Height / 2, 0);
+                sourceItem.Top = Math.Max((int) dropInfo.DropPosition.Y, 0);
                 SelectedEquipment = null;
             }
         }
@@ -129,12 +126,30 @@ namespace EquipmentManager.ViewModel
 
         private void EquipmentLayoutManagerDataInitialized(object sender, EventArgs e)
         {
-            _equipmentLayoutManager.Synchronize(Equipments);
+            var savedItems = new List<EquipmentViewModel>();
+            _equipmentLayoutManager.Synchronize(savedItems);
+            Equipments.AddRange(savedItems);
+        }
+
+        private void EquipmentLayoutManagerEquipmentDataExported(object sender, EventArgs e)
+        {
+            _ioService.ReleaseCursor();
+            _ioService.ShowDialog("导出", "导出成功");
         }
 
         private void EquipmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             RefreshData();
+        }
+
+        private void ExecuteAddLine()
+        {
+            Equipments.Add(new BoundaryViewModel
+            {
+                Left = 100,
+                Height = 50,
+                Top = 100
+            });
         }
 
         private void ExecuteAddMock()
@@ -143,7 +158,7 @@ namespace EquipmentManager.ViewModel
             _ioService.ShowDialog(viewModel);
             if (viewModel.Result)
             {
-                var existingItem = Equipments.FirstOrDefault(x => x.EquipmentId == viewModel.EquipmentId);
+                var existingItem = Equipments.OfType<EquipmentViewModel>().FirstOrDefault(x => x.EquipmentId == viewModel.EquipmentId);
                 if (existingItem != null)
                 {
                     existingItem.Height = viewModel.Height;
@@ -159,12 +174,12 @@ namespace EquipmentManager.ViewModel
         private async Task ExecuteExport()
         {
             _ioService.SetCursorBusy();
-            await _equipmentLayoutManager.Export(Equipments);
+            await _equipmentLayoutManager.Export(Equipments.OfType<EquipmentViewModel>().ToList());
         }
 
         private void ExecuteSelect()
         {
-            var goal = Equipments.FirstOrDefault(x => x.EquipmentId.Equals(GoalEquipmentId, StringComparison.CurrentCultureIgnoreCase));
+            var goal = Equipments.OfType<EquipmentViewModel>().FirstOrDefault(x => x.EquipmentId.Equals(GoalEquipmentId, StringComparison.CurrentCultureIgnoreCase));
             if (goal != null)
             {
                 SelectedEquipment = goal;
@@ -173,10 +188,10 @@ namespace EquipmentManager.ViewModel
 
         private void RefreshData()
         {
-            RunningEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.Running);
-            PmEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.Pm);
-            DownEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.Down);
-            OffLineEquipmentAmout = Equipments.Count(x => x.Status == EquipmentStatus.OffLine);
+            RunningEquipmentAmout = Equipments.OfType<EquipmentViewModel>().Count(x => x.Status == EquipmentStatus.Running);
+            PmEquipmentAmout = Equipments.OfType<EquipmentViewModel>().Count(x => x.Status == EquipmentStatus.Pm);
+            DownEquipmentAmout = Equipments.OfType<EquipmentViewModel>().Count(x => x.Status == EquipmentStatus.Down);
+            OffLineEquipmentAmout = Equipments.OfType<EquipmentViewModel>().Count(x => x.Status == EquipmentStatus.OffLine);
         }
 
         #endregion
@@ -186,7 +201,7 @@ namespace EquipmentManager.ViewModel
         private readonly IIOService _ioService;
         private readonly IEquipmentLayoutManager _equipmentLayoutManager;
 
-        private EquipmentViewModel _selectedEquipment;
+        private IEquipmentViewVisibleViewModel _selectedEquipment;
         private string _goalEquipmentId;
 
         private int _runningEquipmentAmout;
