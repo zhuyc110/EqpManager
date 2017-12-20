@@ -6,7 +6,7 @@ using Prism.Mvvm;
 
 namespace EquipmentManager.ViewModel.Equipment
 {
-    public class BoundaryViewModel : BindableBase, IEquipmentViewVisibleModel
+    public class BoundaryViewModel : BindableBase, IEquipmentViewVisualModel, IEquipmentViewItem
     {
         public string Id { get; set; }
 
@@ -22,7 +22,15 @@ namespace EquipmentManager.ViewModel.Equipment
             set => SetProperty(ref _left, value);
         }
 
-        public int Size { get; set; }
+        public int Size
+        {
+            get => _size;
+            set
+            {
+                SetProperty(ref _size, value);
+                RefreshData();
+            }
+        }
 
         public bool IsEquipment => false;
 
@@ -44,7 +52,13 @@ namespace EquipmentManager.ViewModel.Equipment
             private set => SetProperty(ref _height, value);
         }
 
+        public bool IsResizing { get; set; }
+
         public ICommand ChangeOrientationCommand { get; }
+
+        public bool CanResizeVertical => Orientation == Orientation.Vertical;
+
+        public bool CanResizeHorizontal => Orientation == Orientation.Horizontal;
 
         public BoundaryViewModel(Orientation orientation, int size)
         {
@@ -65,6 +79,8 @@ namespace EquipmentManager.ViewModel.Equipment
         {
             Orientation = Orientation == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
             RefreshData();
+            RaisePropertyChanged(nameof(CanResizeVertical));
+            RaisePropertyChanged(nameof(CanResizeHorizontal));
         }
 
         private void RefreshData()
@@ -92,6 +108,7 @@ namespace EquipmentManager.ViewModel.Equipment
         private Orientation _orientation;
         private int _width = 2;
         private int _height = 2;
+        private int _size = 50;
 
         #endregion
     }

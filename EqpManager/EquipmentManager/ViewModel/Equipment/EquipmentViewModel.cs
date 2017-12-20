@@ -5,7 +5,7 @@ using Prism.Mvvm;
 
 namespace EquipmentManager.ViewModel.Equipment
 {
-    public class EquipmentViewModel : BindableBase, IEquipmentViewVisibleModel
+    public class EquipmentViewModel : BindableBase, IEquipmentViewVisualModel, IEquipmentViewItem
     {
         public string Id => EquipmentId;
 
@@ -45,11 +45,15 @@ namespace EquipmentManager.ViewModel.Equipment
             set => SetProperty(ref _left, value);
         }
 
+        public bool CanResizeVertical => false;
+        public bool CanResizeHorizontal => false;
+
         public EquipmentViewModel(string equipmentId, int height = 56)
         {
             EquipmentId = equipmentId;
             _statusChangedTime = DateTime.Now;
             Size = height;
+            Orientation = Orientation.Horizontal;
         }
 
         #region Fields

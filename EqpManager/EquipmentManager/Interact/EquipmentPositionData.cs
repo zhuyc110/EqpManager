@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace EquipmentManager.Interact
 {
     [Serializable]
-    public class EquipmentPositionData : IEquipmentViewVisibleModel
+    public class EquipmentPositionData : IEquipmentViewVisualModel
     {
         public string Id { get; set; }
 

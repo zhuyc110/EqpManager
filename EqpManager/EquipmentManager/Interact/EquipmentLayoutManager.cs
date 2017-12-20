@@ -29,7 +29,7 @@ namespace EquipmentManager.Interact
 
         #region IEquipmentLayoutManager Members
 
-        public async Task Export(IList<IEquipmentViewVisibleModel> equipments)
+        public async Task Export(IList<IEquipmentViewVisualModel> equipments)
         {
             var filePath = _ioService.OpenFileDialog("Select file", "export file|*.export;*.txt", false);
             if (string.IsNullOrWhiteSpace(filePath))
@@ -96,7 +96,7 @@ namespace EquipmentManager.Interact
             DataInitialized?.Invoke(null, EventArgs.Empty);
         }
 
-        public void Synchronize(IList<IEquipmentViewVisibleModel> equipments)
+        public void Synchronize(IList<IEquipmentViewVisualModel> equipments)
         {
             foreach (var positionData in EquipmentPositionDatas.EquipmentPositionDatas)
             {

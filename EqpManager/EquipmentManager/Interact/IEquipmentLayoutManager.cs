@@ -4,15 +4,25 @@ using System.Threading.Tasks;
 
 namespace EquipmentManager.Interact
 {
+    /// <summary>
+    /// Manages all the <see cref="IEquipmentViewVisualModel"/> extracted from the application.
+    /// </summary>
     public interface IEquipmentLayoutManager
     {
         event EventHandler DataInitialized;
+
         event EventHandler EquipmentDataExported;
 
-        Task Export(IList<IEquipmentViewVisibleModel> equipments);
+        Task Export(IList<IEquipmentViewVisualModel> equipments);
 
-        void Synchronize(IList<IEquipmentViewVisibleModel> equipments);
+        /// <summary>
+        /// Synchronizes all the <see cref="IEquipmentViewVisualModel"/> data into the given <paramref name="equipments"/>.
+        /// </summary>
+        void Synchronize(IList<IEquipmentViewVisualModel> equipments);
 
+        /// <summary>
+        /// Serializes the last extracted file into the <see cref="IEquipmentLayoutManager"/>
+        /// </summary>
         void Initialize();
     }
 }

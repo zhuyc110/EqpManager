@@ -3,9 +3,8 @@
                     xmlns:equipment="clr-namespace:EquipmentManager.ViewModel.Equipment"
                     xmlns:controls="clr-namespace:EquipmentManager.Controls"
                     xmlns:resources="clr-namespace:EquipmentManager.Resources"
-                    xmlns:converters="clr-namespace:EquipmentManager.Converters"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
-    
+
     <Style x:Key="EquipmentControlStyle" TargetType="controls:EquipmentControl">
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="2" />
@@ -15,12 +14,12 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <DataTemplate x:Key="BoundartDataTemplate" DataType="equipment:BoundaryViewModel">
         <Rectangle x:Name="Rectangle" Width="{Binding Width}" Height="{Binding Height}" Fill="Black">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ChangeOrientationCommand}"/>
+                    <i:InvokeCommandAction Command="{Binding ChangeOrientationCommand}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Rectangle>
@@ -71,7 +70,7 @@
                                                  BoundartDataTemplate="{StaticResource BoundartDataTemplate}"
                                                  EquipmentDataTemplate="{StaticResource EquipmentDataTemplate}" />
 
-    <Style x:Key="EquipmentViewControlStyle" TargetType="ItemsControl">
+    <Style x:Key="EquipmentViewControlStyle" TargetType="ListView">
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -81,57 +80,47 @@
         </Setter>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
-                <Style>
+                <Style TargetType="ListViewItem">
                     <Setter Property="Canvas.Left" Value="{Binding Left}" />
                     <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Grid>
+                                    <Grid>
+                                        <Grid Opacity="0"
+                                              Margin="-3">
+                                            <controls:ResizeThumb Height="3"
+                                                                  Cursor="SizeNS"
+                                                                  VerticalAlignment="Top"
+                                                                  IsEnabled="{Binding Path=DataContext.CanResizeVertical, ElementName=ContentPresenter}"
+                                                                  HorizontalAlignment="Stretch" />
+                                            <controls:ResizeThumb Width="3"
+                                                                  Cursor="SizeWE"
+                                                                  VerticalAlignment="Stretch"
+                                                                  IsEnabled="{Binding Path=CanResizeHorizontal}"
+                                                                  HorizontalAlignment="Left" />
+                                            <controls:ResizeThumb Width="3"
+                                                                  Cursor="SizeWE"
+                                                                  VerticalAlignment="Stretch"
+                                                                  IsEnabled="{Binding Path=CanResizeHorizontal}"
+                                                                  HorizontalAlignment="Right" />
+                                            <controls:ResizeThumb Height="3"
+                                                                  Cursor="SizeNS"
+                                                                  VerticalAlignment="Bottom"
+                                                                  IsEnabled="{Binding Path=CanResizeVertical}"
+                                                                  HorizontalAlignment="Stretch" />
+                                        </Grid>
+                                    </Grid>
+                                    <ContentPresenter x:Name="ContentPresenter" DataContext="{Binding}" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </Setter.Value>
         </Setter>
         <Setter Property="ItemTemplateSelector" Value="{StaticResource EquipmentViewItemTemplateSelector}" />
-        <!--<Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate DataType="equipment:EquipmentViewModel">
-                    <controls:EquipmentControl x:Name="EquipmentControl"
-                                               EquipmentId="{Binding Path=EquipmentId}"
-                                               PackageCode="{Binding Path=PackageCode}"
-                                               StatusChangeTime="{Binding Path=StatusChangedTime}"
-                                               Status="{Binding Path=Status}"
-                                               Height="{Binding Path=Height}"
-                                               Style="{StaticResource EquipmentControlStyle}">
-                        <controls:EquipmentControl.ToolTip>
-                            <Grid MinWidth="200" Background="#A8D8B9" Margin="-5,-4">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="5" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Equipment ID" FontWeight="Bold" />
-                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=EquipmentId}" FontWeight="Bold" />
-
-                                <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Stroke="#36563C" StrokeDashArray="4,2" Height="2"
-                                           Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}" />
-
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Package Code" />
-                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=PackageCode}" />
-
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Status" />
-                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=Status}" />
-
-                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Status Time" />
-                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Path=StatusChangedDetailTime}" />
-
-                            </Grid>
-                        </controls:EquipmentControl.ToolTip>
-                    </controls:EquipmentControl>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>-->
     </Style>
 
 

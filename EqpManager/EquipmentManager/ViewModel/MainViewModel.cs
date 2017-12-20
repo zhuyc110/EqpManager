@@ -21,9 +21,9 @@ namespace EquipmentManager.ViewModel
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class MainViewModel : BindableBase, IDropTarget
     {
-        public ObservableCollection<IEquipmentViewVisibleModel> Equipments { get; }
+        public ObservableCollection<IEquipmentViewVisualModel> Equipments { get; }
 
-        public IEquipmentViewVisibleModel SelectedEquipment
+        public IEquipmentViewVisualModel SelectedEquipment
         {
             get => _selectedEquipment;
             set => SetProperty(ref _selectedEquipment, value);
@@ -90,7 +90,7 @@ namespace EquipmentManager.ViewModel
             ExportCommand = new DelegateCommand(async () => await ExecuteExport());
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             ResetScaleCommand = new DelegateCommand(() => ScaleValue = 1, () => ScaleValue != 1);
-            Equipments = new ObservableCollection<IEquipmentViewVisibleModel>();
+            Equipments = new ObservableCollection<IEquipmentViewVisualModel>();
             Equipments.CollectionChanged += EquipmentsCollectionChanged;
             _equipmentLayoutManager.DataInitialized += EquipmentLayoutManagerDataInitialized;
             _equipmentLayoutManager.EquipmentDataExported += EquipmentLayoutManagerEquipmentDataExported;
@@ -110,7 +110,7 @@ namespace EquipmentManager.ViewModel
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                 dropInfo.Effects = DragDropEffects.Move;
-                var sourceItem = dropInfo.Data as IEquipmentViewVisibleModel;
+                var sourceItem = dropInfo.Data as IEquipmentViewVisualModel;
                 if (sourceItem != null)
                 {
                     var targetPosition = dropInfo.DropPosition - DragDropHandler.Delta;
@@ -122,7 +122,7 @@ namespace EquipmentManager.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            var sourceItem = dropInfo.Data as IEquipmentViewVisibleModel;
+            var sourceItem = dropInfo.Data as IEquipmentViewVisualModel;
             if (sourceItem != null)
             {
                 SelectedEquipment = null;
@@ -141,7 +141,7 @@ namespace EquipmentManager.ViewModel
         private void EquipmentLayoutManagerEquipmentDataExported(object sender, EventArgs e)
         {
             _ioService.ReleaseCursor();
-            _ioService.ShowDialog("导出", "导出成功");
+            _ioService.ShowDialog("Export", "Export finished.");
         }
 
         private void EquipmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -208,7 +208,7 @@ namespace EquipmentManager.ViewModel
         private readonly IIOService _ioService;
         private readonly IEquipmentLayoutManager _equipmentLayoutManager;
 
-        private IEquipmentViewVisibleModel _selectedEquipment;
+        private IEquipmentViewVisualModel _selectedEquipment;
         private string _goalEquipmentId;
 
         private int _runningEquipmentAmout;
