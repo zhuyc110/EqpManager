@@ -73,7 +73,8 @@ namespace EquipmentManager.Infrastructure
                 Width = dialogSetting?.Width ?? 300,
                 Height = dialogSetting?.Height ?? 200,
                 ResizeMode = ResizeMode.NoResize,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                WindowState = dialogSetting?.WindowState??WindowState.Normal
             };
             viewModel.RequestClose += (sender, args) => window.Close();
             window.ShowDialog();

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:regions="http://prismlibrary.com/"
         mc:Ignorable="d"
+        WindowState="Maximized"
         Title="Equipment manager" Height="400" Width="600">
     <Grid>
         <ContentControl Grid.Row="0" regions:RegionManager.RegionName="MainRegion" Margin="10"></ContentControl>

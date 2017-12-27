@@ -33,6 +33,7 @@ namespace EquipmentManager.ViewModel
         public ICommand AddMockCommand { get; }
         public ICommand AddMockLineCommand { get; }
         public ICommand ExportCommand { get; }
+        public ICommand LayoutCommand { get; }
 
         public DelegateCommand ResetScaleCommand { get; }
 
@@ -88,6 +89,7 @@ namespace EquipmentManager.ViewModel
             AddMockCommand = new DelegateCommand(ExecuteAddMock);
             AddMockLineCommand = new DelegateCommand(ExecuteAddMockLine);
             ExportCommand = new DelegateCommand(async () => await ExecuteExport());
+            LayoutCommand = new DelegateCommand(ExecuteLayout);
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             ResetScaleCommand = new DelegateCommand(() => ScaleValue = 1, () => ScaleValue != 1);
             Equipments = new ObservableCollection<IEquipmentViewVisualModel>();
@@ -96,7 +98,7 @@ namespace EquipmentManager.ViewModel
             _equipmentLayoutManager.EquipmentDataExported += EquipmentLayoutManagerEquipmentDataExported;
             RefreshData();
         }
-        
+
         #region IDropTarget Members
 
         public void DragOver(IDropInfo dropInfo)
@@ -182,6 +184,16 @@ namespace EquipmentManager.ViewModel
         {
             _ioService.SetCursorBusy();
             await _equipmentLayoutManager.Export(Equipments);
+        }
+
+        private void ExecuteLayout()
+        {
+            var vm = new LayoutViewModel(Equipments);
+            _ioService.ShowDialog(vm, new DialogSetting
+            {
+                Width = Equipments.Select(x=>x.Left).Max() + 200,
+                Height = 600,
+            });
         }
 
         private void ExecuteSelect()

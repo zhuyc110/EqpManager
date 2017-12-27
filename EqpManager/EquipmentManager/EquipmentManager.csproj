@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Converters\EquipmentStatusToBrushConverter.cs" />
+    <Compile Include="Converters\ZoomBoxWidthConverter.cs" />
     <Compile Include="Infrastructure\DialogSetting.cs" />
     <Compile Include="Infrastructure\DialogViewModel.cs" />
     <Compile Include="Infrastructure\IIOService.cs" />
@@ -115,9 +116,13 @@
     <Compile Include="ViewModel\Equipment\EquipmentViewModel.cs" />
     <Compile Include="Interact\IEquipmentViewVisualModel.cs" />
     <Compile Include="ViewModel\Equipment\IEquipmentViewItem.cs" />
+    <Compile Include="ViewModel\LayoutViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\AddEquipmentView.xaml.cs">
       <DependentUpon>AddEquipmentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LayoutView.xaml.cs">
+      <DependentUpon>LayoutView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -144,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AddEquipmentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

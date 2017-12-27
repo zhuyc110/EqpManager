@@ -7,6 +7,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:controls="clr-namespace:EquipmentManager.Controls"
+             xmlns:converters="clr-namespace:EquipmentManager.Converters"
              d:DataContext="{d:DesignInstance {x:Type viewModel:MainViewModel}, IsDesignTimeCreatable=True}"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
@@ -15,10 +16,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/EquipmentViewStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <converters:ZoomBoxWidthConverter x:Key="ZoomBoxWidthConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="7*" />
@@ -55,12 +57,14 @@
             <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=OffLineEquipmentAmout}" Margin="2" />
         </Grid>
         <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加line" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding Path=AddMockLineCommand}" />
-        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding Path=AddMockCommand}" />
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="添加设备" HorizontalAlignment="Left" VerticalAlignment="Bottom" Command="{Binding Path=AddMockCommand}" />
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="布局" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding Path=LayoutCommand}" />
         <Button Grid.Row="0" Grid.Column="2" Margin="5" Content="导出" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding Path=ExportCommand}" />
         <xctk:Zoombox x:Name="Zoombox" MinScale="0.75" MaxScale="2"
                       Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" 
                       IsUsingScrollBars="True" Scale="{Binding Path=ScaleValue, Mode=TwoWay}" >
-            <ListView Width="{Binding ElementName=Zoombox, Path=ActualWidth}" Height="{Binding ElementName=Zoombox, Path=ActualHeight}"
+            <ListView Width="{Binding ElementName=Zoombox, Path=ActualWidth, Converter={StaticResource ZoomBoxWidthConverter}}" 
+                      Height="{Binding ElementName=Zoombox, Path=ActualHeight, Converter={StaticResource ZoomBoxWidthConverter}}"
                       Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}"
                       dd:DragDrop.IsDragSource="True"
