@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Controls\ResizeThumb.cs" />
     <Compile Include="Converters\EquipmentStatusToBrushConverter.cs" />
+    <Compile Include="Converters\SelectedEquipmentToInfoVisibilityConverter.cs" />
     <Compile Include="Converters\ZoomBoxWidthConverter.cs" />
     <Compile Include="Infrastructure\DialogSetting.cs" />
     <Compile Include="Infrastructure\DialogViewModel.cs" />

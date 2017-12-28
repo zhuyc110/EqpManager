@@ -1,36 +1,30 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
+using EquipmentManager.ViewModel.Equipment;
 
 namespace EquipmentManager.Converters
 {
-    [ValueConversion(typeof(double), typeof(double))]
-    public class ZoomBoxWidthConverter : IValueConverter
+    [ValueConversion(typeof(EquipmentViewModel), typeof(Visibility))]
+    public class SelectedEquipmentToInfoVisibilityConverter : IValueConverter
     {
         #region IValueConverter Members
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var parentWidth = value as double?;
-            if (parentWidth.HasValue)
+            if (value is EquipmentViewModel)
             {
-                return Math.Max(0, parentWidth.Value - DEFAULT_MARGIN);
+                return Visibility.Visible;
             }
 
-            return DEFAULT_WIDTH;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }
-
-        #endregion
-
-        #region Fields
-
-        private const int DEFAULT_WIDTH = 400;
-        private const int DEFAULT_MARGIN = 20;
 
         #endregion
     }
