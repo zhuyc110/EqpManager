@@ -4,14 +4,12 @@ using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.Interact;
 using EquipmentManager.Resources;
 using EquipmentManager.ViewModel.Equipment;
-using GongSolutions.Wpf.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -19,7 +17,7 @@ namespace EquipmentManager.ViewModel
 {
     [Export(typeof(MainViewModel))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class MainViewModel : BindableBase, IDropTarget
+    public class MainViewModel : BindableBase
     {
         public ObservableCollection<IEquipmentViewVisualModel> Equipments { get; }
 
@@ -99,40 +97,6 @@ namespace EquipmentManager.ViewModel
             RefreshData();
         }
 
-        #region IDropTarget Members
-
-        public void DragOver(IDropInfo dropInfo)
-        {
-            if (dropInfo.Data == null)
-            {
-                return;
-            }
-
-            if (SelectedEquipment == dropInfo.Data && (dropInfo.TargetItem == null || dropInfo.TargetItem == dropInfo.Data))
-            {
-                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
-                dropInfo.Effects = DragDropEffects.Move;
-                var sourceItem = dropInfo.Data as IEquipmentViewVisualModel;
-                if (sourceItem != null)
-                {
-                    var targetPosition = dropInfo.DropPosition - DragDropHandler.Delta;
-                    sourceItem.Left = Math.Max((int) targetPosition.X, 0);
-                    sourceItem.Top = Math.Max((int) targetPosition.Y, 0);
-                }
-            }
-        }
-
-        public void Drop(IDropInfo dropInfo)
-        {
-            var sourceItem = dropInfo.Data as IEquipmentViewVisualModel;
-            if (sourceItem != null)
-            {
-                SelectedEquipment = null;
-            }
-        }
-
-        #endregion
-
         #region Private methods
 
         private void EquipmentLayoutManagerDataInitialized(object sender, EventArgs e)
@@ -191,7 +155,7 @@ namespace EquipmentManager.ViewModel
             var vm = new LayoutViewModel(Equipments);
             _ioService.ShowDialog(vm, new DialogSetting
             {
-                Width = Equipments.Select(x=>x.Left).Max() + 200,
+                Width = Equipments.Select(x => x.Left).Max() + 200,
                 Height = 600,
             });
         }

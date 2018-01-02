@@ -1,22 +1,25 @@
-﻿<UserControl x:Class="EquipmentManager.View.LayoutView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModel="clr-namespace:EquipmentManager.ViewModel"
-             xmlns:dd="urn:gong-wpf-dragdrop"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:converters="clr-namespace:EquipmentManager.Converters"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
-             d:DataContext="{d:DesignInstance {x:Type viewModel:LayoutViewModel}, IsDesignTimeCreatable=True}"
-             mc:Ignorable="d"
-             x:Name="LayoutControl"
-             d:DesignHeight="600" d:DesignWidth="800">
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:viewModel="clr-namespace:EquipmentManager.ViewModel"
+    xmlns:dd="urn:gong-wpf-dragdrop"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:converters="clr-namespace:EquipmentManager.Converters"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock" x:Class="EquipmentManager.View.LayoutView"
+    d:DataContext="{d:DesignInstance {x:Type viewModel:LayoutViewModel}, IsDesignTimeCreatable=True}"
+    mc:Ignorable="d"
+    x:Name="LayoutControl"
+    d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Resources/EquipmentViewStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <xcad:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <VisualBrush x:Key="VisualBrush" Stretch="Fill" TileMode="Tile" Viewport="0,0,80,80" ViewportUnits="Absolute">
                 <VisualBrush.Visual>
                     <UniformGrid Columns="2" Rows="2" Width="80" Height="80">
@@ -28,11 +31,10 @@
                 </VisualBrush.Visual>
             </VisualBrush>
             <converters:ZoomBoxWidthConverter x:Key="ZoomBoxWidthConverter" />
-            <converters:SelectedEquipmentToInfoVisibilityConverter x:Key="SelectedEquipmentToInfoVisibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="WindowGrid"
-          Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ContentPresenter}, Path=ActualWidth, Converter={StaticResource ZoomBoxWidthConverter}}">
+          Width="{Binding ActualWidth, Converter={StaticResource ZoomBoxWidthConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="7*" />
             <RowDefinition Height="*" />
@@ -43,9 +45,15 @@
         </Grid.ColumnDefinitions>
 
         <Grid Background="AliceBlue" Grid.Row="0" Grid.Column="0"
-              Visibility="{Binding Path=SelectedEquipment, Converter={StaticResource SelectedEquipmentToInfoVisibilityConverter}}"
-              HorizontalAlignment="Left" VerticalAlignment="Top"
-              MinWidth="80" MinHeight="100" Margin="20" ZIndex="1">
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top"
+              Visibility="{Binding EquipmentInfoBoardVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+              MinWidth="80" MinHeight="100" Margin="20" Panel.ZIndex="1">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseEnter">
+                    <i:InvokeCommandAction Command="{Binding UpdateEquipmentInfoBoardPositionCommand}" CommandParameter="10" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="5" />
@@ -58,40 +66,81 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Text="Equipment ID" FontWeight="Bold" />
-            <TextBlock Margin="5" Grid.Row="0" Grid.Column="1" Text="{Binding Path=SelectedEquipment.Id}" FontWeight="Bold" />
+            <TextBlock Margin="5" Grid.Row="0" Grid.Column="1"
+                       Visibility="{Binding Path=ShowEquipmentInfoBoard, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       Text="{Binding SelectedEquipment.Id}" FontWeight="Bold" />
 
             <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Stroke="#36563C" StrokeDashArray="4,2" Height="2"
-                       Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}" />
+                       Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}" />
 
             <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Top" />
-            <TextBlock Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding Path=SelectedEquipment.Top}" />
+            <TextBlock Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding SelectedEquipment.Top}" />
 
             <TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Text="Left" />
-            <TextBlock Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding Path=SelectedEquipment.Left}" />
+            <TextBlock Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedEquipment.Left}" />
 
             <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Text="Size" />
-            <TextBlock Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding Path=SelectedEquipment.Size}" />
+            <TextBlock Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding SelectedEquipment.Size}" />
+
+        </Grid>
+        <Grid Background="AliceBlue" Grid.Row="0" Grid.Column="0"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Bottom"
+              Visibility="{Binding EquipmentInfoBoardVisibility, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+              MinWidth="80" MinHeight="100" Margin="20" Panel.ZIndex="1">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseEnter">
+                    <i:InvokeCommandAction Command="{Binding UpdateEquipmentInfoBoardPositionCommand}" CommandParameter="10" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Text="Equipment ID" FontWeight="Bold" />
+            <TextBlock Margin="5" Grid.Row="0" Grid.Column="1"
+                       Visibility="{Binding Path=ShowEquipmentInfoBoard, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       Text="{Binding SelectedEquipment.Id}" FontWeight="Bold" />
+
+            <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Stroke="#36563C" StrokeDashArray="4,2" Height="2"
+                       Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}" />
+
+            <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Top" />
+            <TextBlock Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding SelectedEquipment.Top}" />
+
+            <TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Text="Left" />
+            <TextBlock Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedEquipment.Left}" />
+
+            <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Text="Size" />
+            <TextBlock Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding SelectedEquipment.Size}" />
 
         </Grid>
         <xctk:Zoombox x:Name="Zoombox" MinScale="0.75" MaxScale="2"
                       Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2"
-                      IsUsingScrollBars="True" Scale="{Binding Path=ScaleValue, Mode=TwoWay}">
-            <ListView Width="{Binding ElementName=Zoombox, Path=ActualWidth, Converter={StaticResource ZoomBoxWidthConverter}}"
-                      Height="{Binding ElementName=Zoombox, Path=ActualHeight, Converter={StaticResource ZoomBoxWidthConverter}}"
+                      IsUsingScrollBars="True" Scale="{Binding ScaleValue, Mode=TwoWay}">
+            <ListView Width="{Binding ActualWidth, Converter={StaticResource ZoomBoxWidthConverter}, ElementName=Zoombox}"
+                      Height="{Binding ActualHeight, Converter={StaticResource ZoomBoxWidthConverter}, ElementName=Zoombox}"
                       Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      ItemsSource="{Binding Path=Equipments}" SelectedItem="{Binding Path=SelectedEquipment}"
+                      ItemsSource="{Binding Equipments}" SelectedItem="{Binding SelectedEquipment}"
                       dd:DragDrop.IsDragSource="True"
                       dd:DragDrop.IsDropTarget="True"
-                      dd:DragDrop.DragHandler="{Binding Path=DragDropHandler}"
+                      dd:DragDrop.DragHandler="{Binding DragDropHandler}"
                       dd:DragDrop.DropHandler="{Binding}"
                       VerticalAlignment="Stretch"
                       HorizontalAlignment="Stretch" Background="{StaticResource VisualBrush}"
-                      Style="{StaticResource EquipmentViewControlStyle}" />
+                      Style="{StaticResource LayoutViewControlStyle}" />
         </xctk:Zoombox>
         <DockPanel Grid.Column="1" Grid.Row="0" Margin="15" VerticalAlignment="Top">
             <Button VerticalAlignment="Top" Margin="2" Content="◇" Command="{Binding ResetScaleCommand}" ToolTip="重置" />
             <Slider x:Name="ScaleSlider" Margin="2"
-                    Value="{Binding Path=ScaleValue, Mode=TwoWay}" Minimum="0.75" Maximum="2" VerticalAlignment="Top" />
+                    Value="{Binding ScaleValue, Mode=TwoWay}" Minimum="0.75" Maximum="2" VerticalAlignment="Top" />
         </DockPanel>
     </Grid>
 </UserControl>

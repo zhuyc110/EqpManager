@@ -93,6 +93,52 @@
                                             <controls:ResizeThumb Height="3"
                                                                   Cursor="SizeNS"
                                                                   VerticalAlignment="Top"
+                                                                  IsEnabled="False"
+                                                                  HorizontalAlignment="Stretch" />
+                                            <controls:ResizeThumb Width="3"
+                                                                  Cursor="SizeWE"
+                                                                  VerticalAlignment="Stretch"
+                                                                  IsEnabled="False"
+                                                                  HorizontalAlignment="Left" />
+                                            <controls:ResizeThumb Width="3"
+                                                                  Cursor="SizeWE"
+                                                                  VerticalAlignment="Stretch"
+                                                                  IsEnabled="False"
+                                                                  HorizontalAlignment="Right" />
+                                            <controls:ResizeThumb Height="3"
+                                                                  Cursor="SizeNS"
+                                                                  VerticalAlignment="Bottom"
+                                                                  IsEnabled="False"
+                                                                  HorizontalAlignment="Stretch" />
+                                        </Grid>
+                                    </Grid>
+                                    <ContentPresenter x:Name="ContentPresenter" DataContext="{Binding}" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplateSelector" Value="{StaticResource EquipmentViewItemTemplateSelector}" />
+    </Style>
+
+    <Style x:Key="LayoutViewControlStyle" BasedOn="{StaticResource EquipmentViewControlStyle}" TargetType="ListView">
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Grid>
+                                    <Grid>
+                                        <Grid Opacity="0"
+                                              Margin="-3">
+                                            <controls:ResizeThumb Height="3"
+                                                                  Cursor="SizeNS"
+                                                                  VerticalAlignment="Top"
                                                                   IsEnabled="{Binding Path=DataContext.CanResizeVertical, ElementName=ContentPresenter}"
                                                                   HorizontalAlignment="Stretch" />
                                             <controls:ResizeThumb Width="3"
@@ -120,8 +166,6 @@
                 </Style>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemTemplateSelector" Value="{StaticResource EquipmentViewItemTemplateSelector}" />
     </Style>
-
 
 </ResourceDictionary>

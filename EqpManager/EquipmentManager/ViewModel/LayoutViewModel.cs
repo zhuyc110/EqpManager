@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.Interact;
 using EquipmentManager.Resources;
+using EquipmentManager.ViewModel.Equipment;
 using GongSolutions.Wpf.DragDrop;
 using Prism.Commands;
 
@@ -19,7 +21,11 @@ namespace EquipmentManager.ViewModel
         public IEquipmentViewVisualModel SelectedEquipment
         {
             get => _selectedEquipment;
-            set => SetProperty(ref _selectedEquipment, value);
+            set
+            {
+                SetProperty(ref _selectedEquipment, value);
+                RaisePropertyChanged(nameof(ShowEquipmentInfoBoard));
+            }
         }
 
         public double ScaleValue
@@ -34,11 +40,22 @@ namespace EquipmentManager.ViewModel
 
         public DelegateCommand ResetScaleCommand { get; }
 
+        public bool EquipmentInfoBoardVisibility
+        {
+            get => _equipmentInfoBoardVisibility;
+            set => SetProperty(ref _equipmentInfoBoardVisibility, value);
+        }
+
+        public bool ShowEquipmentInfoBoard => SelectedEquipment is EquipmentViewModel;
+
+        public ICommand UpdateEquipmentInfoBoardPositionCommand { get; }
+
         public LayoutViewModel(IEnumerable<IEquipmentViewVisualModel> equipments)
         {
             DragDropHandler = new MainViewDragDropHandler();
             Equipments = new ObservableCollection<IEquipmentViewVisualModel>(equipments);
             ResetScaleCommand = new DelegateCommand(() => ScaleValue = 1, () => Math.Abs(ScaleValue - 1) > 0.1);
+            UpdateEquipmentInfoBoardPositionCommand = new DelegateCommand(() => EquipmentInfoBoardVisibility = !EquipmentInfoBoardVisibility);
         }
 
         #region IDropTarget Members
@@ -79,6 +96,7 @@ namespace EquipmentManager.ViewModel
 
         private IEquipmentViewVisualModel _selectedEquipment;
         private double _scaleValue = 1;
+        private bool _equipmentInfoBoardVisibility = true;
 
         #endregion
     }
