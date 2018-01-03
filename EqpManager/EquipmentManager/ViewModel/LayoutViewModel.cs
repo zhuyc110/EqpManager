@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.Interact;
@@ -49,13 +50,18 @@ namespace EquipmentManager.ViewModel
         public bool ShowEquipmentInfoBoard => SelectedEquipment is EquipmentViewModel;
 
         public ICommand UpdateEquipmentInfoBoardPositionCommand { get; }
+        public ICommand AddMockCommand { get; }
+        public ICommand AddMockLineCommand { get; }
 
-        public LayoutViewModel(IEnumerable<IEquipmentViewVisualModel> equipments)
+        public LayoutViewModel(ObservableCollection<IEquipmentViewVisualModel> equipments, IIOService ioService)
         {
+            _ioService = ioService;
             DragDropHandler = new MainViewDragDropHandler();
-            Equipments = new ObservableCollection<IEquipmentViewVisualModel>(equipments);
+            Equipments = equipments;
             ResetScaleCommand = new DelegateCommand(() => ScaleValue = 1, () => Math.Abs(ScaleValue - 1) > 0.1);
             UpdateEquipmentInfoBoardPositionCommand = new DelegateCommand(() => EquipmentInfoBoardVisibility = !EquipmentInfoBoardVisibility);
+            AddMockCommand = new DelegateCommand(ExecuteAddMock);
+            AddMockLineCommand = new DelegateCommand(ExecuteAddMockLine);
         }
 
         #region IDropTarget Members
@@ -92,11 +98,45 @@ namespace EquipmentManager.ViewModel
 
         #endregion
 
+        #region Private methods
+
+        private void ExecuteAddMock()
+        {
+            var viewModel = new AddEquipmentViewModel(70 * Equipments.Count);
+            _ioService.ShowDialog(viewModel);
+            if (viewModel.Result)
+            {
+                var existingItem = Equipments.OfType<EquipmentViewModel>().FirstOrDefault(x => x.EquipmentId == viewModel.EquipmentId);
+                if (existingItem != null)
+                {
+                    existingItem.Size = viewModel.Height;
+                    existingItem.Status = viewModel.Status;
+                }
+                else
+                {
+                    Equipments.Add(viewModel.ToEquipmentViewModel());
+                }
+            }
+        }
+
+        private void ExecuteAddMockLine()
+        {
+            Equipments.Add(new BoundaryViewModel(Orientation.Horizontal, 100)
+            {
+                Id = BoundaryViewModel.GetId(),
+                Left = 100,
+                Top = 100
+            });
+        }
+
+        #endregion
+
         #region Fields
 
         private IEquipmentViewVisualModel _selectedEquipment;
         private double _scaleValue = 1;
         private bool _equipmentInfoBoardVisibility = true;
+        private readonly IIOService _ioService;
 
         #endregion
     }

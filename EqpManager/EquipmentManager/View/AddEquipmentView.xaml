@@ -48,6 +48,6 @@
         <Button Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Left" Content="OK" MinWidth="50" Margin="10,0"
                 Command="{Binding Path=ApllyCommand}" />
         <Button Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Cancel" MinWidth="50" Margin="10,0"
-                Command="{Binding Path=ApllyCommand}" />
+                Command="{Binding Path=CancelCommand}" />
     </Grid>
 </UserControl>

@@ -6,7 +6,7 @@ namespace EquipmentManager.Resources
 {
     public class EquipmentViewItemTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate BoundartDataTemplate { get; set; }
+        public DataTemplate BoundaryDataTemplate { get; set; }
 
         public DataTemplate EquipmentDataTemplate { get; set; }
 
@@ -18,7 +18,7 @@ namespace EquipmentManager.Resources
             }
             if (item is BoundaryViewModel)
             {
-                return BoundartDataTemplate;
+                return BoundaryDataTemplate;
             }
 
             return base.SelectTemplate(item, container);

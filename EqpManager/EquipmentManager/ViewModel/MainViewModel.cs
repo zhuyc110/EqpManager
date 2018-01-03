@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 using EquipmentManager.Infrastructure;
 using EquipmentManager.Interact;
@@ -28,8 +27,6 @@ namespace EquipmentManager.ViewModel
         }
 
         public ICommand SelectCommand { get; }
-        public ICommand AddMockCommand { get; }
-        public ICommand AddMockLineCommand { get; }
         public ICommand ExportCommand { get; }
         public ICommand LayoutCommand { get; }
 
@@ -84,8 +81,6 @@ namespace EquipmentManager.ViewModel
             _ioService = ioService;
             _equipmentLayoutManager = equipmentLayoutManager;
             SelectCommand = new DelegateCommand(ExecuteSelect);
-            AddMockCommand = new DelegateCommand(ExecuteAddMock);
-            AddMockLineCommand = new DelegateCommand(ExecuteAddMockLine);
             ExportCommand = new DelegateCommand(async () => await ExecuteExport());
             LayoutCommand = new DelegateCommand(ExecuteLayout);
             // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -115,35 +110,6 @@ namespace EquipmentManager.ViewModel
             RefreshData();
         }
 
-        private void ExecuteAddMock()
-        {
-            var viewModel = new AddEquipmentViewModel(70 * Equipments.Count);
-            _ioService.ShowDialog(viewModel);
-            if (viewModel.Result)
-            {
-                var existingItem = Equipments.OfType<EquipmentViewModel>().FirstOrDefault(x => x.EquipmentId == viewModel.EquipmentId);
-                if (existingItem != null)
-                {
-                    existingItem.Size = viewModel.Height;
-                    existingItem.Status = viewModel.Status;
-                }
-                else
-                {
-                    Equipments.Add(viewModel.ToEquipmentViewModel());
-                }
-            }
-        }
-
-        private void ExecuteAddMockLine()
-        {
-            Equipments.Add(new BoundaryViewModel(Orientation.Horizontal, 100)
-            {
-                Id = BoundaryViewModel.GetId(),
-                Left = 100,
-                Top = 100
-            });
-        }
-
         private async Task ExecuteExport()
         {
             _ioService.SetCursorBusy();
@@ -152,7 +118,7 @@ namespace EquipmentManager.ViewModel
 
         private void ExecuteLayout()
         {
-            var vm = new LayoutViewModel(Equipments);
+            var vm = new LayoutViewModel(Equipments, _ioService);
             _ioService.ShowDialog(vm, new DialogSetting
             {
                 Width = Equipments.Select(x => x.Left).Max() + 200,

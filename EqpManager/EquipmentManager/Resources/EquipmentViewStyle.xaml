@@ -15,7 +15,7 @@
         </Style.Triggers>
     </Style>
 
-    <DataTemplate x:Key="BoundartDataTemplate" DataType="equipment:BoundaryViewModel">
+    <DataTemplate x:Key="BoundaryDataTemplate" DataType="equipment:BoundaryViewModel">
         <Rectangle x:Name="Rectangle" Width="{Binding Width}" Height="{Binding Height}" Fill="Black">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
@@ -23,6 +23,10 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Rectangle>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BoundaryPresentationTemplate" DataType="equipment:BoundaryViewModel">
+        <Rectangle x:Name="Rectangle" Width="{Binding Width}" Height="{Binding Height}" Fill="Black" />
     </DataTemplate>
 
     <DataTemplate x:Key="EquipmentDataTemplate" DataType="equipment:EquipmentViewModel">
@@ -67,7 +71,11 @@
     </DataTemplate>
 
     <resources:EquipmentViewItemTemplateSelector x:Key="EquipmentViewItemTemplateSelector"
-                                                 BoundartDataTemplate="{StaticResource BoundartDataTemplate}"
+                                                 BoundaryDataTemplate="{StaticResource BoundaryPresentationTemplate}"
+                                                 EquipmentDataTemplate="{StaticResource EquipmentDataTemplate}" />
+
+    <resources:EquipmentViewItemTemplateSelector x:Key="LayoutViewItemTemplateSelector"
+                                                 BoundaryDataTemplate="{StaticResource BoundaryDataTemplate}"
                                                  EquipmentDataTemplate="{StaticResource EquipmentDataTemplate}" />
 
     <Style x:Key="EquipmentViewControlStyle" TargetType="ListView">
@@ -166,6 +174,7 @@
                 </Style>
             </Setter.Value>
         </Setter>
+        <Setter Property="ItemTemplateSelector" Value="{StaticResource LayoutViewItemTemplateSelector}" />
     </Style>
 
 </ResourceDictionary>
