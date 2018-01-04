@@ -149,7 +149,16 @@
                       dd:DragDrop.DropHandler="{Binding}"
                       VerticalAlignment="Stretch"
                       HorizontalAlignment="Stretch" Background="{StaticResource VisualBrush}"
-                      Style="{StaticResource LayoutViewControlStyle}" />
+                      Style="{StaticResource LayoutViewControlStyle}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="删除所选设备" Command="{Binding DeleteCommand}"/>
+                        <MenuItem Header="撤销设备删除" Command="{Binding RevertCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="改变隔断方向" Command="{Binding ChangeOrientationCommand}"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
         </xctk:Zoombox>
         <DockPanel Grid.Column="1" Grid.Row="0" Margin="15" VerticalAlignment="Top">
             <Button VerticalAlignment="Top" Margin="2" Content="◇" Command="{Binding ResetScaleCommand}" ToolTip="重置" />

@@ -17,11 +17,11 @@
 
     <DataTemplate x:Key="BoundaryDataTemplate" DataType="equipment:BoundaryViewModel">
         <Rectangle x:Name="Rectangle" Width="{Binding Width}" Height="{Binding Height}" Fill="Black">
-            <i:Interaction.Triggers>
+            <!--<i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
                     <i:InvokeCommandAction Command="{Binding ChangeOrientationCommand}" />
                 </i:EventTrigger>
-            </i:Interaction.Triggers>
+            </i:Interaction.Triggers>-->
         </Rectangle>
     </DataTemplate>
 

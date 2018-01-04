@@ -54,8 +54,6 @@ namespace EquipmentManager.ViewModel.Equipment
 
         public bool IsResizing { get; set; }
 
-        public ICommand ChangeOrientationCommand { get; }
-
         public bool CanResizeVertical => Orientation == Orientation.Vertical;
 
         public bool CanResizeHorizontal => Orientation == Orientation.Horizontal;
@@ -64,7 +62,6 @@ namespace EquipmentManager.ViewModel.Equipment
         {
             Orientation = orientation;
             Size = size;
-            ChangeOrientationCommand = new DelegateCommand(ExecuteChangeOrientation);
             RefreshData();
         }
 
@@ -75,7 +72,7 @@ namespace EquipmentManager.ViewModel.Equipment
 
         #region Private methods
 
-        private void ExecuteChangeOrientation()
+        public void ChangeOrientation()
         {
             Orientation = Orientation == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
             RefreshData();
