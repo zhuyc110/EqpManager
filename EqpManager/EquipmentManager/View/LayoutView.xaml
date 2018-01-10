@@ -93,9 +93,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Margin="5" Grid.Column="0" Content="添加设备" Command="{Binding Path=AddMockCommand}"/>
-            <Button Margin="5" Grid.Column="1" Content="添加隔断" Command="{Binding Path=AddMockLineCommand}"/>
-            
+            <Button Margin="5" Grid.Column="0" Content="添加设备" Command="{Binding Path=AddMockCommand}" />
+            <Button Margin="5" Grid.Column="1" Content="添加隔断" Command="{Binding Path=AddMockLineCommand}" />
+
         </Grid>
         <Grid Background="AliceBlue" Grid.Row="0" Grid.Column="0"
               HorizontalAlignment="Left"
@@ -152,10 +152,10 @@
                       Style="{StaticResource LayoutViewControlStyle}">
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="删除所选设备" Command="{Binding DeleteCommand}"/>
-                        <MenuItem Header="撤销设备删除" Command="{Binding RevertCommand}"/>
-                        <Separator/>
-                        <MenuItem Header="改变隔断方向" Command="{Binding ChangeOrientationCommand}"/>
+                        <MenuItem Header="删除所选设备" Command="{Binding DeleteCommand}" />
+                        <MenuItem Header="撤销设备删除" Command="{Binding RevertCommand}" />
+                        <Separator />
+                        <MenuItem Header="改变隔断方向" Command="{Binding ChangeOrientationCommand}" />
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>

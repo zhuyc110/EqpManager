@@ -23,7 +23,20 @@ namespace EquipmentManager.ViewModel
         public IEquipmentViewVisualModel SelectedEquipment
         {
             get => _selectedEquipment;
-            set => SetProperty(ref _selectedEquipment, value);
+            set
+            {
+                if (_selectedEquipment is EquipmentViewModel)
+                {
+                    ((EquipmentViewModel) _selectedEquipment).IsSelected = false;
+                }
+
+                SetProperty(ref _selectedEquipment, value);
+
+                if (_selectedEquipment is EquipmentViewModel)
+                {
+                    ((EquipmentViewModel) _selectedEquipment).IsSelected = true;
+                }
+            }
         }
 
         public ICommand SelectCommand { get; }
@@ -118,6 +131,7 @@ namespace EquipmentManager.ViewModel
 
         private void ExecuteLayout()
         {
+            SelectedEquipment = null;
             var vm = new LayoutViewModel(Equipments, _ioService);
             _ioService.ShowDialog(vm, new DialogSetting
             {

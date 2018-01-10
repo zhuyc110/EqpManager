@@ -45,6 +45,12 @@ namespace EquipmentManager.ViewModel.Equipment
             set => SetProperty(ref _left, value);
         }
 
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
+
         public bool CanResizeVertical => false;
         public bool CanResizeHorizontal => false;
 
@@ -66,6 +72,7 @@ namespace EquipmentManager.ViewModel.Equipment
         private EquipmentStatus _status;
 
         private string _packageCode;
+        private bool _isSelected;
 
         #endregion
     }

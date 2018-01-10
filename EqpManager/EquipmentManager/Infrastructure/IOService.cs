@@ -77,6 +77,7 @@ namespace EquipmentManager.Infrastructure
                 WindowState = dialogSetting?.WindowState??WindowState.Normal
             };
             viewModel.RequestClose += (sender, args) => window.Close();
+            window.Closed += (sender, args) => viewModel.Dispose();
             window.ShowDialog();
         }
 

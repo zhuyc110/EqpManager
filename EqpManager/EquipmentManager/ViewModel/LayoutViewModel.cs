@@ -25,7 +25,18 @@ namespace EquipmentManager.ViewModel
             get => _selectedEquipment;
             set
             {
+                if (_selectedEquipment is EquipmentViewModel)
+                {
+                    ((EquipmentViewModel) _selectedEquipment).IsSelected = false;
+                }
+
                 SetProperty(ref _selectedEquipment, value);
+
+                if (_selectedEquipment is EquipmentViewModel)
+                {
+                    ((EquipmentViewModel) _selectedEquipment).IsSelected = true;
+                }
+
                 RaisePropertyChanged(nameof(ShowEquipmentInfoBoard));
                 ChangeOrientationCommand.RaiseCanExecuteChanged();
             }
@@ -71,6 +82,11 @@ namespace EquipmentManager.ViewModel
             DeleteCommand = new DelegateCommand(ExecuteDelete, () => SelectedEquipment != null);
             ChangeOrientationCommand = new DelegateCommand(ExecuteChangeOrientation, () => SelectedEquipment is BoundaryViewModel);
             RevertCommand = new DelegateCommand(ExecuteRevert, () => _deletedVisualModels.Any());
+        }
+
+        public override void Dispose()
+        {
+            SelectedEquipment = null;
         }
 
         #region IDropTarget Members

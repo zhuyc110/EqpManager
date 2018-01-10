@@ -7,6 +7,8 @@ namespace EquipmentManager.Infrastructure
     {
         public event EventHandler RequestClose;
 
+        public abstract void Dispose();
+
         #region Protected methods
 
         protected void OnRequestClose()

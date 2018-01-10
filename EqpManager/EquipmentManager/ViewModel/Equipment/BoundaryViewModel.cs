@@ -1,7 +1,5 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Input;
 using EquipmentManager.Interact;
-using Prism.Commands;
 using Prism.Mvvm;
 
 namespace EquipmentManager.ViewModel.Equipment
@@ -65,13 +63,6 @@ namespace EquipmentManager.ViewModel.Equipment
             RefreshData();
         }
 
-        public static string GetId()
-        {
-            return _id++.ToString();
-        }
-
-        #region Private methods
-
         public void ChangeOrientation()
         {
             Orientation = Orientation == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
@@ -79,6 +70,13 @@ namespace EquipmentManager.ViewModel.Equipment
             RaisePropertyChanged(nameof(CanResizeVertical));
             RaisePropertyChanged(nameof(CanResizeHorizontal));
         }
+
+        public static string GetId()
+        {
+            return _id++.ToString();
+        }
+
+        #region Private methods
 
         private void RefreshData()
         {

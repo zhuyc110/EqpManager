@@ -32,6 +32,10 @@ namespace EquipmentManager.ViewModel.Equipment
             Height = 56;
         }
 
+        public override void Dispose()
+        {
+        }
+
         public EquipmentViewModel ToEquipmentViewModel()
         {
             return new EquipmentViewModel(EquipmentId, Height)
